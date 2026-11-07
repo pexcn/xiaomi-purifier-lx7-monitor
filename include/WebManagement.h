@@ -20,6 +20,8 @@ class WebManagement {
   bool validCsrf();
   void openSetup(uint32_t now);
   void getConfig();
+  void getLogs();
+  void getSystemInfo();
   void postConfig();
   void uploadFirmware();
   void finishFirmware();

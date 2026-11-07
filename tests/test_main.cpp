@@ -6,6 +6,7 @@
 #include "ConfigJson.h"
 #include <LittleFS.h>
 #include "SessionAuth.h"
+#include "RuntimeLog.h"
 #include <array>
 #include <cassert>
 #include <cstdio>
@@ -13,6 +14,64 @@
 #include <string>
 
 namespace {
+std::string logText(const RuntimeLog& log) {
+  std::string out;
+  char chunk[17];
+  for (size_t offset = 0;;) {
+    const size_t n = log.read(offset, chunk, sizeof(chunk));
+    if (!n) return out;
+    out.append(chunk, n);
+    offset += n;
+  }
+}
+
+void logTests() {
+  RuntimeLog log;
+  assert(log.size() == 0 && logText(log).empty());
+  log.append(1234, LogLevel::Info, "Boot complete");
+  assert(logText(log) == "[1.234] INFO Boot complete\n");
+  log.append(2000, LogLevel::Warning, "first\nsecond\rthird");
+  assert(logText(log).find("WARN first second third\n") != std::string::npos);
+  for (unsigned i = 0; i < 500; ++i) {
+    char message[40];
+    snprintf(message, sizeof(message), "event %u", i);
+    log.append(i * 1000, LogLevel::Info, message);
+    assert(log.size() <= RuntimeLog::Capacity);
+  }
+  const auto text = logText(log);
+  assert(text.find("event 499\n") != std::string::npos);
+  assert(text.find("event 0\n") == std::string::npos);
+  assert(text.front() == '[' && text.back() == '\n');
+  size_t previous = 0;
+  for (size_t at = 0; at < text.size();) {
+    assert(text[at] == '[');
+    const auto end = text.find('\n', at);
+    assert(end != std::string::npos);
+    unsigned value;
+    assert(sscanf(text.c_str() + at, "[%u.", &value) == 1 && value >= previous);
+    previous = value;
+    at = end + 1;
+  }
+  RuntimeLog longLine;
+  std::string large(4000, 'x');
+  longLine.append(0, LogLevel::Error, large.c_str());
+  assert(longLine.size() <= 192 && logText(longLine).back() == '\n');
+  std::string unicode;
+  for (size_t i = 0; i < 200; ++i) unicode += "中";
+  RuntimeLog utf8;
+  utf8.append(0, LogLevel::Info, unicode.c_str());
+  const auto clipped = logText(utf8);
+  const auto prefix = std::string("[0.000] INFO ");
+  assert((clipped.size() - prefix.size() - 1) % 3 == 0);
+  RuntimeLog longUptime;
+  longUptime.append(uint64_t(UINT32_MAX) + 1001, LogLevel::Info, "Long uptime");
+  assert(logText(longUptime).find("[4294968.296]") == 0);
+  char empty[1];
+  assert(log.read(0, empty, 0) == 0);
+  assert(log.read(log.size(), empty, 1) == 0);
+  assert(log.read(0, nullptr, 1) == 0);
+}
+
 void configTests() {
   // Synthetic settings; never real credentials.
   JsonDocument doc;
@@ -329,11 +388,12 @@ void transportTests() {
 }
 
 int main() {
+  logTests();
   configTests();
   sessionTests();
   protocolTests();
   controllerTests();
   codecTests();
   transportTests();
-  puts("PASS: short passwords, cookie sessions, configuration, screen timers, MiIO and UDP");
+  puts("PASS: bounded logs, short passwords, cookie sessions, configuration, screen timers, MiIO and UDP");
 }
