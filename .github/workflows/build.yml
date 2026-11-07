@@ -1,0 +1,60 @@
+name: Firmware
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.15'
+      - name: Install PlatformIO
+        run: python -m pip install -r requirements.txt
+      - name: Build firmware without credentials
+        run: pio run -e nodemcuv2
+      - name: Host tests (ASan and UBSan)
+        run: bash tests/run.sh
+      - name: Prepare firmware and checksum
+        run: |
+          mkdir -p output
+          cp .pio/build/nodemcuv2/firmware.bin output/mi-purifier-monitor-nodemcuv2.bin
+          cd output
+          sha256sum mi-purifier-monitor-nodemcuv2.bin > SHA256SUMS
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: firmware-nodemcuv2
+          path: output/*
+          if-no-files-found: error
+  release:
+    if: startsWith(github.ref, 'refs/tags/') && github.event_name == 'push'
+    needs: build
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - name: Download firmware from this run
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+        run: gh run download "$RUN_ID" -n firmware-nodemcuv2 -D output
+      - uses: softprops/action-gh-release@8a0cd651e5b2365bd640854a3fa5dfc70e4875f3 # v3.0.4
+        with:
+          fail_on_unmatched_files: true
+          generate_release_notes: true
+          files: |
+            output/mi-purifier-monitor-nodemcuv2.bin
+            output/SHA256SUMS

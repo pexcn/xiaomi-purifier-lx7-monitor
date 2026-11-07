@@ -1,0 +1,8 @@
+.pio/
+.venv/
+work/
+output/
+data/config.json
+data/*secret*
+.vscode/
+__pycache__/

@@ -1,0 +1,19 @@
+{
+  "wifi_ssid": "YOUR_WIFI_SSID",
+  "wifi_password": "YOUR_WIFI_PASSWORD",
+  "device_ip": "192.0.2.1",
+  "token": "REPLACE_WITH_32_HEX_CHAR_TOKEN",
+  "poll_interval_ms": 2000,
+  "screen_off_delay_ms": 30000,
+  "response_timeout_ms": 1500,
+  "stale_after_ms": 10000,
+  "filter_display": "percent",
+  "litres_per_flow_unit": [0.0, 0.0],
+  "activity_source": "unverified",
+  "making_mask": 0,
+  "making_value": 0,
+  "diagnostics": false,
+  "oled_address": 60,
+  "oled_sda": 4,
+  "oled_scl": 5
+}
