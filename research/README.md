@@ -2,6 +2,8 @@
 
 目标设备由用户提供：小米净水器 500G 增强版，MR532-D。分析日期：2026-11-07。
 
+快速了解当前进展：[TL;DR：已确认结论、待验证问题与下一步](docs/tldr.md)。
+
 ## 当前结论
 
 - **已证实（用户实测）**：设备当前报告 `fw_ver=2.1.3`、`mcu_fw_ver=0012`；与仓库样本 `1.3.9` 不同。固件函数地址和本地委托表属于旧样本，不能直接作为当前固件实现的证据；插件证据独立标注，详见 [版本核对](docs/firmware.md#实机版本核对)。
@@ -17,6 +19,7 @@
 
 | 文件 | 内容 |
 |---|---|
+| [docs/tldr.md](docs/tldr.md) | 重要发现、证据边界和下一步的一页摘要 |
 | [docs/firmware.md](docs/firmware.md) | 环境、镜像结构、地址映射和 REA 限制 |
 | [docs/usedflow.md](docs/usedflow.md) | 流量统计证据、结论边界、只读验证方案 |
 | [docs/miio-api.md](docs/miio-api.md) | MiIO、串口接口、参数及风险 |
