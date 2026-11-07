@@ -4,6 +4,7 @@
 #include "Controller.h"
 #include "MiioClient.h"
 #include "Ssd1306Display.h"
+#include "WebManagement.h"
 
 namespace {
 Config config;
@@ -11,6 +12,7 @@ MiioClient purifier;
 Controller* controller = nullptr;
 Ssd1306Display oled(config.settings);
 Display& display = oled;
+WebManagement management(config, display);
 bool configured = false, connected = false;
 uint32_t lastWifiTry = 0, lastRender = 0;
 LinkStatus reported = LinkStatus::Connecting;
@@ -32,8 +34,8 @@ void setup() {
   display.begin();
   if (!configured) {
     WiFi.mode(WIFI_OFF);
-    display.message(error);
     Serial.println(error);
+    management.begin(false, millis());
     return;
   }
   static Controller app(config.settings);
@@ -44,10 +46,13 @@ void setup() {
   WiFi.setAutoReconnect(true);
   WiFi.begin(config.ssid, config.password);
   lastWifiTry = millis();
+  management.begin(true, lastWifiTry);
 }
 
 void loop() {
-  const uint32_t now = millis();
+  uint32_t now = millis();
+  management.tick(now);
+  now = millis();
   if (!configured) { delay(20); return; }
   if (WiFi.status() != WL_CONNECTED) {
     if (connected) { purifier.reset(); connected = false; }
@@ -84,7 +89,7 @@ void loop() {
       }
     }
   }
-  if (elapsed(now, lastRender, 200)) {
+  if (!management.ownsDisplay(now) && elapsed(now, lastRender, 200)) {
     lastRender = now;
     display.show(controller->view(now));
   }

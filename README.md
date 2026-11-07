@@ -15,34 +15,46 @@ NodeMCU 经 USB 5V 供电；OLED 的供电及 I²C 上拉使用 **3.3V**。
 | SDA | D2 / GPIO4 |
 | SCL | D1 / GPIO5 |
 
-默认 7 位地址 `0x3c`，可配置为 `0x3d`。配置中的引脚是 GPIO 编号。使用 U8g2 单页缓冲（128 字节），屏幕使用英文短标签，避免加载中文字库。`IN/OUT` 为 TDS，`F1` 为复合滤芯，`F2` 为 RO，`R` 为十六进制原始 `run_status`，`RINSE` 为原始冲洗字段，`--` 表示字段不可用。
+默认 7 位地址 `0x3c`，可配置为 `0x3d`。配置中的引脚是 GPIO 编号。使用 U8g2 单页缓冲（128 字节），屏幕使用英文短标签，避免加载中文字库。`IN/OUT` 为 TDS，`F1` 为复合滤芯，`F2` 为 RO，`--` 表示字段不可用。
 
-## 配置、编译与烧录
+## 首次烧录和网页配置
 
-需要 Python 3.10+、PlatformIO 和 USB 串口驱动。建议使用独立虚拟环境：
+只需通过 USB 刷入一次**应用固件**，无需构建或上传 `littlefs.bin`：
 
 ```sh
 python3 -m venv .venv
 # Linux/macOS；Windows 使用 .venv\Scripts\activate
 . .venv/bin/activate
 python -m pip install -r requirements.txt
-cp data/config.example.json data/config.json
-# 在本地编辑 data/config.json，填入 Wi-Fi、净水器 IPv4 和 32 位十六进制 Token
 pio run -e nodemcuv2
 pio run -e nodemcuv2 -t upload
-pio run -e nodemcuv2 -t uploadfs
-pio device monitor -b 115200
 ```
 
-`uploadfs` 会替换此开发板上的 LittleFS 内容，配置修改后需重新上传并重启；配置不会写入净水器。可通过 `--upload-port` 选择串口。默认 4MB NodeMCU 布局无需额外分区配置。
+1. 新设备启动后，OLED 显示设置热点 `purifier-xxxxxx`、随机 `KEY` 和 `http://192.168.4.1`。
+2. 手机/电脑连接该热点，在浏览器打开显示的地址，填写 Wi-Fi、净水器 IP、32 位十六进制 Token，并设置 12–64 字节管理密码。
+3. 若首次使用提示存储未初始化，勾选“初始化设备存储”再保存。设备会自行创建 LittleFS 并写入配置；已能正常挂载的存储不会被格式化。
+4. 保存后自动重启。连接家庭 Wi-Fi，访问 `http://purifier-xxxxxx.local`，或设备连接成功时 OLED 显示的 IP；局域网用户名为 `admin`，密码为刚设置的管理密码。设备 IP 也会输出到 115200 波特率串口。
 
-`data/config.json` 已被 Git 忽略。凭据只存在开发板 LittleFS，不编入应用固件，不在串口输出。不要提交配置、发布文件系统镜像或上传构建目录；LittleFS 没有加密，拿到开发板的人可能读取配置。CI 不需要任何净水器凭据。Release 的 `.bin` 只包含应用，首次使用仍须上传本地配置文件系统。
+网页直接内嵌在应用固件中。Wi-Fi 密码、Token、管理密码只在开发板的 `/config.json` 保存，不编入固件、不在网页回显、不输出串口；编辑时留空保留原值。清除 Wi-Fi 密码需明确勾选无密码网络。保存先写临时文件再原子重命名，未通过校验不改动原配置。
 
-设备 IP 建议设置 DHCP 保留地址；开发板须能访问净水器 UDP 54321（源端口 49152），AP 客户端隔离可能阻止通信。Token 由你已有的合法本地工具获取；此固件不获取 Token、不发送 setter、不复位滤芯、不更改净水器配置。
+设备 IP 建议设置 DHCP 保留地址；开发板须能访问净水器 UDP 54321（源端口 49152），AP 客户端隔离可能阻止通信。Token 使用你已有的合法本地工具获取；固件不获取 Token、不发送 setter、不复位滤芯、不更改净水器配置。
+
+### OTA 升级与旧版迁移
+
+- 下载 Actions / Release 中的 `mi-purifier-monitor-nodemcuv2.bin`，打开设备管理网页，在“固件升级”中上传。完成后自动重启，Wi-Fi、Token、显示设置及管理密码都会保留。
+- **旧版固件没有 OTA，第一次迁移仍需 USB 刷入本次应用固件**，以后可用网页升级。选择保留文件系统的普通上传方式，不执行整片擦除；原先刷入 LittleFS 的配置会兼容读取，只需通过设置热点补充管理密码。
+- OTA 仅写应用区，不提供文件系统上传入口。使用相同 NodeMCU 4MB / 默认 1MB LittleFS 布局的本项目应用，升级时保持供电；固件过大、文件校验失败或上传中断会报告错误。损坏到无法启动、变更 Flash 布局等情况仍需 USB 恢复。
+- 当前使用核心自带 WebServer / Updater，无新增 OTA 库；支持局域网 Digest 登录及表单随机校验码。页面为本地 HTTP，配置区没有加密，应只在可信局域网或设置热点使用。
+
+### 重新配网和恢复入口
+
+运行后按住 NodeMCU **FLASH 键 3 秒**，可重新打开设置热点；不要按住 FLASH 再复位，否则会进入芯片下载模式。热点使用每次新生成、只在 OLED 显示的密码，10 分钟后自动关闭。连接设置热点代表具有实体访问权限，可重设管理密码；家庭局域网请求仍需管理密码。
+
+Wi-Fi 连续断开 60 秒也会打开一次设置热点，原连接仍持续重试。忘记管理密码或配错 Wi-Fi 时无需重刷配置。若自定义 OLED 使用了 GPIO0，FLASH 恢复检测会停用以避免引脚冲突。
 
 ## 常用配置
 
-完整示例在 [data/config.example.json](data/config.example.json)，除四项连接信息外其余可省略。
+完整存储格式参考 [docs/config.example.json](docs/config.example.json)，**无需复制或刷入此文件**。常用连接信息在网页填写，其余字段可在网页的高级设置中修改。
 
 | 字段 | 默认值 | 说明 |
 |---|---|---|
@@ -70,11 +82,11 @@ pio device monitor -b 115200
 
 ### 亮屏模式
 
-- `"unverified"`：有正常数据时保持亮屏，显示 `UNVERIFIED` 和原始状态。推荐先开 `diagnostics`，在自然发生的闲置、制水、冲洗过程中记录状态；固件不会主动制造工况。
-- `"flow_change"`：任一滤芯的 `usedflow` 增加且其 `totalflow` 未变化时亮屏，最后一次增加后延迟熄屏，显示 `FLOW~`。启动及恢复通信时也显示一个延时窗口。**这是近似活动提示**：计数可能分档、延迟或停机更新，可能漏掉短时用水，冲洗是否计数未知；不能保证制水开始立即亮屏或停止后恰好 30 秒熄屏。
-- `"run_status"`：仅在确认规则后配置非零 `making_mask`，按 `(run_status & making_mask) == making_value` 判定制水。制水期间常亮，首次观察到非制水状态时启动延时；重复闲置应答不会延长延时。缺失状态则显示 `UNVERIFIED`。仓库没有填入任何猜测的 lx7 位值。
+- `"unverified"`：有正常数据时保持亮屏。推荐先开 `diagnostics`，在自然发生的闲置、制水、冲洗过程中记录状态；固件不会主动制造工况。
+- `"flow_change"`：任一滤芯的 `usedflow` 增加且其 `totalflow` 未变化时亮屏，最后一次增加后延迟熄屏。启动及恢复通信时也显示一个延时窗口。**这是近似活动提示**：计数可能分档、延迟或停机更新，可能漏掉短时用水，冲洗是否计数未知；不能保证制水开始立即亮屏或停止后恰好 30 秒熄屏。
+- `"run_status"`：仅在确认规则后配置非零 `making_mask`，按 `(run_status & making_mask) == making_value` 判定制水。制水期间常亮，首次观察到非制水状态时启动延时；重复闲置应答不会延长延时。缺失状态则继续亮屏。仓库没有填入任何猜测的 lx7 位值。
 
-一次通信失败即显示异常、隐藏旧数据，持续重试；故障提示维持一个熄屏延时窗口，持续故障不会反复唤醒屏幕。恢复成功后重新显示。Wi-Fi 每 10 秒尝试重连；MiIO 超时、校验失败、RPC 错误会重新握手。错误和原始状态均可从串口观察；配置缺失/无效时不连接网络、不自动格式化文件系统。
+一次通信失败即显示异常、隐藏旧数据，持续重试；故障提示维持一个熄屏延时窗口，持续故障不会反复唤醒屏幕。恢复成功后重新显示。Wi-Fi 每 10 秒尝试重连；MiIO 超时、校验失败、RPC 错误会重新握手。错误和原始状态均可从串口观察；OLED 正常界面仅显示 TDS、滤芯余量和温度，已移除 `R`、`UNVERIFIED`、`RINSE` 等诊断标签。配置缺失/无效时进入设置热点，文件系统挂载失败不会自动格式化。
 
 ## 结构与测试
 
@@ -83,7 +95,9 @@ MiioCodec + MiioCrypto       MiIO 报文、校验、AES（当前使用核心自�
 MiioClient + Lx7Protocol     UDP 状态机、只读属性请求、严格按请求顺序解析
 Controller                  流量寿命、活动判定、数据有效性、屏幕计时
 Display → Ssd1306Display     与通信无关的轻量显示接口及 U8g2 实现
-Config / main               独立配置及 Wi-Fi、各模块的连接
+Config / ConfigJson          本地持久化、校验、配置更新与旧版兼容
+WebManagement / WebPage       设置热点、管理网页及应用 OTA
+main                         Wi-Fi 与各模块的连接
 ```
 
 更换 ST7789 / ILI9341 时实现 `Display`、选择屏幕尺寸/方向并替换实例即可，通信逻辑不变。升级 ESP32 还需选定开发板、增加 PlatformIO 环境，替换 Wi-Fi 入口及 `MiioCrypto` 平台实现；本仓库不声称已经编译验证未指定的 ESP32/彩屏组合。
@@ -94,10 +108,10 @@ Config / main               独立配置及 Wi-Fi、各模块的连接
 bash tests/run.sh
 ```
 
-主机测试启用 ASan/UBSan，覆盖固定 MiIO 报文向量、损坏/超长报文、错误来源、旧应答 ID、超时重握手、字段空值、流量钳位、故障恢复、熄屏计时和 `millis()` 回绕。主机使用模拟 UDP/OpenSSL 后端；ESP8266 的真实 Wi-Fi、BearSSL 运行及 OLED 接线仍需实物验证。
+主机测试启用 ASan/UBSan，覆盖配置迁移、秘密字段脱敏、留空保留原值、非法配置拒绝及固定 MiIO 报文向量、损坏/超长报文、错误来源、旧应答 ID、超时重握手、字段空值、流量钳位、故障恢复、熄屏计时和 `millis()` 回绕。主机使用模拟 UDP/OpenSSL 后端；ESP8266 的真实 Wi-Fi、OTA 重启后配置保留、BearSSL 运行及 OLED 接线仍需实物验证。
 
 ## CI 与发布
 
 每次 push（包括 tag）、PR 及手动触发均编译和测试，上传应用 `.bin` 和 `SHA256SUMS`。推送任意 tag 会在构建通过后创建 GitHub Release 并附上相同文件，不上传配置或文件系统镜像。例如自行确定版本后执行 `git tag v0.1.0 && git push origin v0.1.0`；本次开发不会自动创建 tag。
 
-依赖已在 2026-11-07 核对并锁定：PlatformIO 6.2.0、Espressif8266 4.2.1（官方最新稳定平台，捆绑 Arduino core 3.1.2）、U8g2 2.36.18、ArduinoJson 7.4.3。Actions 使用最新稳定版本对应 SHA：checkout 7.0.1、setup-python 7.1.0、upload-artifact 7.0.2、action-gh-release 3.0.4；runner 明确指定已 GA 的 `ubuntu-26.04`，不用 `ubuntu-latest`。Python 选择稳定 3.15 系列。Dependabot 跟踪 Actions/Python 依赖；PlatformIO 平台和库升级需手动核对并重编译。
+依赖已在 2026-11-07 核对并锁定：PlatformIO 6.2.0、Espressif8266 4.2.1（官方最新稳定平台，捆绑 Arduino core 3.1.2）、U8g2 2.37.1（上游实际版本提交 `b3a40de`，固定完整 SHA；Registry 的 2.36.18 滞后，上游 2.37.1 标签指向的提交仍标 2.36.19）、ArduinoJson 7.4.3。Actions 使用最新稳定版本对应 SHA：checkout 7.0.1、setup-python 7.1.0、upload-artifact 7.0.2、action-gh-release 3.0.4；runner 明确指定已 GA 的 `ubuntu-26.04`，不用 `ubuntu-latest`。Python 选择稳定 3.15 系列。Dependabot 跟踪 Actions/Python 依赖；PlatformIO 平台和库升级需手动核对并重编译。

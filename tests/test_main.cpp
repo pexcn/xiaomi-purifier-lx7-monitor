@@ -3,6 +3,8 @@
 #include "MiioCodec.h"
 #include "MiioCrypto.h"
 #include "MiioClient.h"
+#include "ConfigJson.h"
+#include <LittleFS.h>
 #include <array>
 #include <cassert>
 #include <cstdio>
@@ -10,6 +12,76 @@
 #include <string>
 
 namespace {
+void configTests() {
+  // Synthetic settings; never real credentials.
+  JsonDocument doc;
+  assert(!deserializeJson(doc, R"({"wifi_ssid":"test-network","wifi_password":"test-password",
+      "device_ip":"192.0.2.2","token":"00112233445566778899aabbccddeeff"})"));
+  Config c;
+  const char* error;
+  assert(parseConfig(doc.as<JsonVariantConst>(), c, error));
+  assert(!c.adminPassword[0]); // Existing configs remain readable for physical-access migration.
+  strcpy(c.adminPassword, "test-admin-password");
+  c.settings.filterDisplay = FilterDisplay::Litres;
+  c.settings.litresPerFlowUnit[0] = 1;
+  configToJson(doc, c, true);
+  Config roundTrip;
+  assert(parseConfig(doc.as<JsonVariantConst>(), roundTrip, error));
+  assert(!strcmp(roundTrip.password, c.password) && !strcmp(roundTrip.token, c.token));
+  assert(!strcmp(roundTrip.adminPassword, c.adminPassword));
+  assert(roundTrip.settings.filterDisplay == FilterDisplay::Litres && roundTrip.settings.litresPerFlowUnit[0] == 1);
+  configToJson(doc, c, false);
+  assert(doc["wifi_password"].isNull() && doc["token"].isNull() && doc["admin_password"].isNull());
+
+  JsonDocument update;
+  assert(!deserializeJson(update, R"({"wifi_ssid":"test-network","device_ip":"192.0.2.2",
+      "wifi_password":"","token":"","admin_password":"","open_wifi":false,
+      "settings":{"screen_off_delay_ms":45000}})"));
+  assert(mergeConfigUpdate(update.as<JsonVariantConst>(), c, roundTrip, error));
+  assert(!strcmp(roundTrip.password, c.password) && !strcmp(roundTrip.token, c.token));
+  assert(!strcmp(roundTrip.adminPassword, c.adminPassword));
+  assert(roundTrip.settings.screenOffDelayMs == 45000);
+  assert(roundTrip.settings.filterDisplay == FilterDisplay::Litres);
+  update["open_wifi"] = true;
+  assert(mergeConfigUpdate(update.as<JsonVariantConst>(), c, roundTrip, error));
+  assert(!roundTrip.password[0] && !strcmp(roundTrip.token, c.token));
+  update["settings"]["token"] = "override";
+  assert(!mergeConfigUpdate(update.as<JsonVariantConst>(), c, roundTrip, error));
+  update["settings"].remove("token");
+  update["settings"]["poll_interval_ms"] = -1;
+  assert(!mergeConfigUpdate(update.as<JsonVariantConst>(), c, roundTrip, error));
+  update["settings"].remove("poll_interval_ms");
+  update["admin_password"] = "short";
+  assert(!mergeConfigUpdate(update.as<JsonVariantConst>(), c, roundTrip, error));
+  update["admin_password"] = "";
+  update["device_ip"] = "192.0.2.256";
+  assert(!mergeConfigUpdate(update.as<JsonVariantConst>(), c, roundTrip, error));
+  update["device_ip"] = "192.0.2.2";
+  update["settings"]["filter_display"] = true;
+  assert(!mergeConfigUpdate(update.as<JsonVariantConst>(), c, roundTrip, error));
+  update["settings"].remove("filter_display");
+  update["settings"]["activity_source"] = "run_status";
+  update["settings"]["making_mask"] = 0;
+  assert(!mergeConfigUpdate(update.as<JsonVariantConst>(), c, roundTrip, error));
+  configToJson(doc, c, true);
+  doc["schema_version"] = 99;
+  assert(!parseConfig(doc.as<JsonVariantConst>(), roundTrip, error));
+
+  LittleFS = TestLittleFS{};
+  assert(!loadConfig(roundTrip, error));
+  assert(!LittleFS.autoFormat && LittleFS.formatCalls == 0);
+  assert(!saveConfig(c, false, error) && LittleFS.formatCalls == 0);
+  assert(saveConfig(c, true, error) && LittleFS.formatCalls == 1);
+  assert(loadConfig(roundTrip, error) && !strcmp(roundTrip.adminPassword, c.adminPassword));
+  const auto original = LittleFS.files.at("/config.json");
+  LittleFS.failRename = true;
+  strcpy(c.ssid, "changed-network");
+  assert(!saveConfig(c, false, error));
+  assert(LittleFS.files.at("/config.json") == original);
+  assert(LittleFS.files.count("/.config.tmp") == 0);
+  assert(loadConfig(roundTrip, error) && !strcmp(roundTrip.ssid, "test-network"));
+}
+
 Lx7Protocol::Result parse(const char* s, PurifierData& d, uint32_t id = 7) {
   std::string input(s);
   return Lx7Protocol::parseResponse(input.data(), input.size(), id, d);
@@ -208,9 +280,10 @@ void transportTests() {
 }
 
 int main() {
+  configTests();
   protocolTests();
   controllerTests();
   codecTests();
   transportTests();
-  puts("PASS: lx7 parsing, flow lifetime, screen timers, MiIO codec and UDP state machine");
+  puts("PASS: configuration migration/redaction/updates, lx7 parsing, screen timers, MiIO and UDP");
 }

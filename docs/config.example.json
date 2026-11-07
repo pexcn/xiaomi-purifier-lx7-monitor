@@ -1,8 +1,10 @@
 {
+  "schema_version": 1,
   "wifi_ssid": "YOUR_WIFI_SSID",
   "wifi_password": "YOUR_WIFI_PASSWORD",
   "device_ip": "192.0.2.1",
   "token": "REPLACE_WITH_32_HEX_CHAR_TOKEN",
+  "admin_password": "SET_A_LOCAL_ADMIN_PASSWORD",
   "poll_interval_ms": 2000,
   "screen_off_delay_ms": 30000,
   "response_timeout_ms": 1500,

@@ -9,6 +9,7 @@ class Ssd1306Display final : public Display {
   void begin() override;
   void show(const ViewModel& model) override;
   void message(const char* text) override;
+  void setupAccess(const char* ssid, const char* password, const char* ip) override;
   void setAwake(bool awake) override;
  private:
   void drawLines(const char* a, const char* b, const char* c, const char* d);

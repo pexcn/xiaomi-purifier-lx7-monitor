@@ -58,6 +58,12 @@ void Ssd1306Display::message(const char* text) {
   setAwake(true);
   drawLines("MI PURIFIER LX7", text, "", "See README / Serial");
 }
+void Ssd1306Display::setupAccess(const char* ssid, const char* password, const char* ip) {
+  setAwake(true);
+  char key[32];
+  snprintf(key, sizeof(key), "KEY: %s", password);
+  drawLines("WIFI SETUP", ssid, key, ip);
+}
 void Ssd1306Display::show(const ViewModel& v) {
   setAwake(v.awake);
   if (!v.awake) return;
@@ -65,22 +71,15 @@ void Ssd1306Display::show(const ViewModel& v) {
     drawLines("MI PURIFIER LX7", linkText(v.link), "DATA UNAVAILABLE", "Retrying automatically");
     return;
   }
-  char a[64], b[64], c[64], d[64], in[12], out[12], f1[16], f2[16], temp[16], status[12], rinse[12];
+  char a[64], b[64], c[64], in[12], out[12], f1[16], f2[16], temp[16];
   countText(in, sizeof(in), v.data.tdsInValid, v.data.tdsIn);
   countText(out, sizeof(out), v.data.tdsOutValid, v.data.tdsOut);
   filterText(f1, sizeof(f1), v.data.filters[0], settings_, 0);
   filterText(f2, sizeof(f2), v.data.filters[1], settings_, 1);
   if (v.data.temperatureValid) snprintf(temp, sizeof(temp), "%.1f", v.data.temperature);
   else snprintf(temp, sizeof(temp), "--");
-  if (v.data.runStatusValid) snprintf(status, sizeof(status), "%08lX", static_cast<unsigned long>(v.data.runStatus));
-  else snprintf(status, sizeof(status), "--------");
-  countText(rinse, sizeof(rinse), v.data.rinseValid, v.data.rinse);
   snprintf(a, sizeof(a), "IN:%s OUT:%s ppm", in, out);
   snprintf(b, sizeof(b), "F1:%s F2:%s", f1, f2);
-  snprintf(c, sizeof(c), "T:%sC R:%s", temp, status);
-  const char* activity = v.activity == Activity::Making ? "MAKING" :
-      v.activity == Activity::Idle ? "IDLE" :
-      v.activity == Activity::FlowObserved ? "FLOW~" : "UNVERIFIED";
-  snprintf(d, sizeof(d), "%s RINSE:%s", activity, rinse);
-  drawLines(a, b, c, d);
+  snprintf(c, sizeof(c), "T:%sC", temp);
+  drawLines(a, b, c, "");
 }
