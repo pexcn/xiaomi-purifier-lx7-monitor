@@ -16,6 +16,7 @@
 | 文件 | 内容 |
 |---|---|
 | [docs/firmware.md](docs/firmware.md) | 环境、镜像结构、地址映射和 REA 限制 |
+| [docs/ota-download.md](docs/ota-download.md) | 下载脚本的首个命中规则及“最新版”判断限制 |
 | [docs/usedflow.md](docs/usedflow.md) | 流量统计证据、结论边界、只读验证方案 |
 | [docs/miio-api.md](docs/miio-api.md) | MiIO、串口接口、参数及风险 |
 | [docs/evidence/](docs/evidence/) | 表解析、SHA-256、精选真实反编译输出 |
