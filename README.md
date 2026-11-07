@@ -1,4 +1,4 @@
-# 小米净水器 OLED 监视器
+# 小米净水器 500G 增强版（MR532-D）监视器
 
 NodeMCU ESP8266 + SSD1306 128×32，通过局域网 MiIO/UDP 只读查询 `yunmi.waterpuri.lx7`，无需 Home Assistant 或云端登录。显示原水/纯水 TDS、温度及两支滤芯的流量寿命；默认每 2 秒轮询，熄屏时继续查询，支持 Wi-Fi 重连、超时重握手和异常提示。
 
@@ -41,7 +41,7 @@ pio run -e nodemcuv2 -t upload
 
 ### OTA 升级与旧版迁移
 
-- 下载 Actions / Release 中的 `mi-purifier-monitor-nodemcuv2.bin`，打开设备管理网页，在“固件升级”中上传。完成后自动重启，Wi-Fi、Token、显示设置及管理密码都会保留。
+- 下载 Actions / Release 中的 `xiaomi-purifier-lx7-monitor-nodemcuv2.bin`，打开设备管理网页，在“固件升级”中上传。完成后自动重启，Wi-Fi、Token、显示设置及管理密码都会保留。
 - **旧版固件没有 OTA，第一次迁移仍需 USB 刷入本次应用固件**，以后可用网页升级。选择保留文件系统的普通上传方式，不执行整片擦除；原先刷入 LittleFS 的配置会兼容读取，只需通过设置热点补充管理密码。
 - OTA 仅写应用区，不提供文件系统上传入口。使用相同 NodeMCU 4MB / 默认 1MB LittleFS 布局的本项目应用，升级时保持供电；固件过大、文件校验失败或上传中断会报告错误。损坏到无法启动、变更 Flash 布局等情况仍需 USB 恢复。
 - 当前使用核心自带 WebServer / Updater，无新增 OTA 库；使用独立的密码登录页、Cookie 会话及表单随机校验码，不弹出 Basic / Digest 认证框。会话空闲 30 分钟过期，也可主动退出登录；设备重启后需重新登录。页面为本地 HTTP，配置区没有加密，应只在可信局域网或设置热点使用。

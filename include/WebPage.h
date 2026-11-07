@@ -4,7 +4,7 @@
 // Embedded in the application image: no filesystem image or external web assets.
 static const char LoginPage[] PROGMEM = R"HTML(<!doctype html>
 <html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>登录净水器显示器</title>
+<title>登录 · 小米净水器 500G 增强版（MR532-D）监视器</title>
 <style>
 :root{font:16px system-ui;color:#20332c;background:#f3f6f3}*{box-sizing:border-box}
 body{min-height:100svh;margin:0;display:grid;place-items:center;padding:20px}
@@ -14,7 +14,7 @@ label{display:block;margin:22px 0 16px}input{display:block;width:100%;margin-top
 button{width:100%;padding:12px;background:#216b50;color:white;border:0;border-radius:6px;font:inherit;cursor:pointer}button:disabled{opacity:.5;cursor:wait}
 #status{min-height:1.5em;font-size:14px;margin-bottom:0}
 </style>
-<main><h1>登录净水器显示器</h1><p>输入管理密码，即可修改设置或升级固件。</p>
+<main><h1>登录净水器监视器</h1><p>输入管理密码，即可修改设置或升级固件。</p>
 <form id="login"><label>管理密码<input name="password" type="password" maxlength="64" required autocomplete="current-password" autofocus></label>
 <button id="submit" disabled>登录</button></form><p id="status" role="status">正在连接设备…</p></main>
 <script>
@@ -32,7 +32,7 @@ form.addEventListener('submit',async e=>{e.preventDefault();button.disabled=true
 
 static const char ManagementPage[] PROGMEM = R"HTML(<!doctype html>
 <html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>净水器显示器设置</title>
+<title>小米净水器 500G 增强版（MR532-D）监视器</title>
 <style>
 :root{font:16px system-ui;color:#20332c;background:#f3f6f3}*{box-sizing:border-box}[hidden]{display:none!important}
 body{max-width:660px;margin:32px auto;padding:0 18px}h1{font-size:26px}h2{font-size:20px}
@@ -42,7 +42,7 @@ textarea{font:13px monospace;min-height:220px}button{padding:11px 18px;backgroun
 button:disabled{opacity:.5;cursor:wait}small,p{color:#52675c;line-height:1.6}#status{white-space:pre-wrap}summary{cursor:pointer}
 header{display:flex;align-items:center;justify-content:space-between;gap:12px}#logout{background:transparent;color:#216b50;border:1px solid #adbeb2;padding:8px 12px;white-space:nowrap}
 </style>
-<header><h1>净水器显示器设置</h1><button id="logout" type="button" hidden>退出登录</button></header><p>设置保存在显示器中，重启和固件升级后仍会保留。</p>
+<header><h1>净水器监视器设置</h1><button id="logout" type="button" hidden>退出登录</button></header><p>设置保存在监视器中，重启和固件升级后仍会保留。</p>
 <p id="status" role="status">正在读取设置…</p>
 <section><h2>连接与显示</h2>
 <form id="config" autocomplete="off">
