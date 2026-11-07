@@ -22,6 +22,8 @@
 | [docs/evidence/](docs/evidence/) | 表解析、SHA-256、精选真实反编译输出 |
 | [scripts/](scripts/) | 只读解析和 Ghidra 导出脚本 |
 
+改进版 OTA 下载器：`scripts/download_ota.py`，仅用 Python 标准库及用户现有 mit 米家缓存。会先查询所有配置接口，再分组件选择候选；当前实机版本须通过参数提供。用法见 [OTA 下载说明](docs/ota-download.md#改进版下载器)。原 `firmware/lx7_ota_mit.py` 保持原样。
+
 `FUN_地址` 是 Ghidra 自动命名；文中的功能说明是分析标签，不是恢复的厂商源码符号。证据保留的 C 输出含自动类型推断错误，应结合原始地址及调用指令复核。
 
 ## 复现
