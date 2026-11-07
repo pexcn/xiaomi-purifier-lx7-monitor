@@ -1,142 +1,162 @@
 #pragma once
 #include <Arduino.h>
 
-// Embedded in the application image: no filesystem image or external web assets.
-static const char LoginPage[] PROGMEM = R"HTML(<!doctype html>
-<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+// Embedded assets: no external framework, CDN, or filesystem image.
+
+static const char LoginPage[] PROGMEM = R"HTML(<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>登录 · 小米净水器 500G 增强版（MR532-D）监视器</title>
-<style>
-:root{font:16px system-ui;color:#20332c;background:#f3f6f3}*{box-sizing:border-box}
-body{min-height:100svh;margin:0;display:grid;place-items:center;padding:20px}
-main{width:100%;max-width:390px;background:white;border:1px solid #dce5dd;border-radius:12px;padding:28px}
-h1{font-size:24px;margin-top:0}p{color:#52675c;line-height:1.6}
-label{display:block;margin:22px 0 16px}input{display:block;width:100%;margin-top:8px;padding:12px;border:1px solid #adbeb2;border-radius:6px;font:inherit}
-button{width:100%;padding:12px;background:#216b50;color:white;border:0;border-radius:6px;font:inherit;cursor:pointer}button:disabled{opacity:.5;cursor:wait}
-#status{min-height:1.5em;font-size:14px;margin-bottom:0}
-</style>
-<main><h1>登录小米净水器监视器</h1><p>输入管理密码，即可修改设置或升级固件。</p>
-<form id="login"><label>管理密码<input name="password" type="password" maxlength="64" required autocomplete="current-password" autofocus></label>
-<button id="submit" disabled>登录</button></form><p id="status" role="status">正在连接设备…</p></main>
+<script>(function(){
+ let mode='system';try{const saved=localStorage.getItem('purifier-theme');if(['system','light','dark'].includes(saved))mode=saved;}catch(e){}
+ const media=matchMedia('(prefers-color-scheme: dark)');
+ function apply(){document.documentElement.dataset.theme=mode==='system'?(media.matches?'dark':'light'):mode;document.documentElement.dataset.themeMode=mode;}
+ apply();media.addEventListener('change',()=>{if(mode==='system')apply();});
+ document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('[data-theme-picker]').forEach(picker=>{
+ picker.value=mode;picker.addEventListener('change',()=>{mode=picker.value;apply();try{localStorage.setItem('purifier-theme',mode);}catch(e){}});
+ });});
+})();</script><style>:root{color-scheme:light;--bg:#f4f7f5;--surface:#fff;--sidebar:#fafcfb;--text:#1b3328;--muted:#5d7065;--border:#dce5df;--accent:#24694e;--on-accent:#fff;--soft:#e7f1eb;--field:#fff;--log-bg:#f0f5f2;--log-text:#244d37;--danger:#a63d35;--danger-bg:#fff0ed;--shadow:0 12px 36px #142b1d0c;font:15px/1.5 system-ui,-apple-system,sans-serif}
+:root[data-theme=dark]{color-scheme:dark;--bg:#101813;--surface:#19251e;--sidebar:#141f18;--text:#e2eee6;--muted:#9eb2a5;--border:#2e4034;--accent:#8bd3a8;--on-accent:#10291b;--soft:#233e2d;--field:#132018;--log-bg:#0c1510;--log-text:#c1e3ce;--danger:#ffb0a4;--danger-bg:#3c2422;--shadow:0 12px 36px #0002}
+*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;color:var(--text);background:var(--bg)}button,input,select,textarea{font:inherit}button,a,input,select,textarea{ -webkit-tap-highlight-color:transparent}button{cursor:pointer}button:disabled{cursor:wait;opacity:.55}a{color:var(--accent)}button{border:0}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:3px}h1,h2,h3,p{margin:0}svg{width:20px;height:20px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.muted,small{color:var(--muted)}small{font-size:12px;line-height:1.6}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 16px;border-radius:8px;background:var(--accent);color:var(--on-accent);font-weight:600}.btn.secondary{border:1px solid var(--border);background:var(--surface);color:var(--text)}.icon-btn{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:8px;color:var(--text);background:transparent}.icon-btn:hover{background:var(--soft)}input:not([type=checkbox]):not([type=file]),select,textarea{width:100%;padding:11px 12px;background:var(--field);color:var(--text);border:1px solid var(--border);border-radius:8px}input::placeholder{color:var(--muted);opacity:.85}input[type=checkbox]{accent-color:var(--accent)}.theme-control{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px;color:var(--muted)}.theme-control select{width:auto;padding:7px 9px;max-width:150px}.brand-icon{display:grid;place-items:center;background:var(--accent);color:var(--on-accent);border-radius:11px;width:40px;height:40px;flex-shrink:0}.brand-icon svg{width:25px;height:25px}.notice{padding:13px 16px;background:var(--soft);border:1px solid var(--border);border-radius:9px;font-size:14px;margin-bottom:20px;white-space:pre-wrap}.notice.error{color:var(--danger);background:var(--danger-bg)}@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
+body{min-height:100svh;display:grid;place-items:center;padding:24px}.login-shell{width:100%;max-width:400px}.login-theme{display:flex;justify-content:flex-end;margin-bottom:16px}.login-theme .theme-control{gap:10px}.login-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;box-shadow:var(--shadow)}.login-card .brand-icon{margin-bottom:24px}.eyebrow{font-size:11px;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}h1{font-size:23px;font-weight:650;letter-spacing:-.03em}.intro{color:var(--muted);font-size:14px;margin-top:10px}label.password{display:grid;gap:8px;margin:28px 0 18px;font-size:13px;font-weight:600}.login-card .btn{width:100%}#status{min-height:21px;font-size:13px;color:var(--danger);margin-top:14px}.login-footer{text-align:center;color:var(--muted);font-size:12px;margin-top:18px}@media(max-width:360px){.login-card{padding:24px}h1{font-size:21px}}
+</style></head><body><div class="login-shell">
+<div class="login-theme"><label class="theme-control"><span>外观</span><select data-theme-picker aria-label="外观模式"><option value="system">跟随系统</option><option value="light">浅色</option><option value="dark">深色</option></select></label></div>
+<main class="login-card"><div class="brand-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3C9 7 5 11 5 15a7 7 0 0 0 14 0c0-4-4-8-7-12Z"/><path d="M8 15a4 4 0 0 0 4 4"/></svg></div>
+<p class="eyebrow">MR532-D / LX7</p><h1>登录小米净水器监视器</h1><p class="intro">输入管理密码，管理设备、查看日志与升级固件。</p>
+<form id="login"><label class="password">管理密码<input name="password" type="password" maxlength="64" required autocomplete="current-password" autofocus placeholder="输入管理密码"></label>
+<button class="btn" id="submit" disabled>登录</button></form><p id="status" role="status">正在连接设备…</p></main>
+<p class="login-footer">本地设备管理 · 无需云端服务</p></div>
 <script>
-const form=document.querySelector('#login'),status=document.querySelector('#status'),button=document.querySelector('#submit');
-let csrf='';
+const form=document.querySelector('#login'),status=document.querySelector('#status'),button=document.querySelector('#submit');let csrf='';
 fetch('/api/login',{cache:'no-store'}).then(async r=>{if(!r.ok)throw Error('连接失败，请刷新后重试');return r.json()}).then(c=>{
- if(!c.has_admin_password){status.textContent='尚未设置管理密码，请连接 OLED 显示的设置热点完成配置。';return;}
- csrf=c.csrf;button.disabled=false;status.textContent='';
+ if(!c.has_admin_password){status.textContent='尚未设置管理密码，请连接 OLED 显示的设置热点完成配置。';return;}csrf=c.csrf;button.disabled=false;status.textContent='';
 }).catch(e=>status.textContent=e.message);
 form.addEventListener('submit',async e=>{e.preventDefault();button.disabled=true;status.textContent='正在登录…';
- try{const r=await fetch('/login?csrf='+encodeURIComponent(csrf),{method:'POST',body:new URLSearchParams(new FormData(form))});
- if(!r.ok)throw Error(await r.text());location.replace('/');}
+ try{const r=await fetch('/login?csrf='+encodeURIComponent(csrf),{method:'POST',body:new URLSearchParams(new FormData(form))});if(!r.ok)throw Error(await r.text());location.replace('/');}
  catch(e){status.textContent=e.message;button.disabled=false;form.elements.password.focus();}});
-</script></html>)HTML";
+</script></body></html>
+)HTML";
 
-static const char ManagementPage[] PROGMEM = R"HTML(<!doctype html>
-<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+static const char ManagementPage[] PROGMEM = R"HTML(<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>小米净水器 500G 增强版（MR532-D）监视器</title>
-<style>
-:root{font:16px system-ui;color:#20332c;background:#f3f6f3}*{box-sizing:border-box}[hidden]{display:none!important}
-body{max-width:660px;margin:32px auto;padding:0 18px}h1{font-size:26px}h2{font-size:20px}
-section{background:white;border:1px solid #dce5dd;border-radius:12px;padding:22px;margin:20px 0}
-label{display:block;margin:16px 0}input:not([type=checkbox]),textarea{display:block;width:100%;margin-top:6px;padding:10px;border:1px solid #adbeb2;border-radius:6px;font:inherit}
-textarea{font:13px monospace;min-height:220px}button{padding:11px 18px;background:#216b50;color:white;border:0;border-radius:6px;font:inherit;cursor:pointer}
-button:disabled{opacity:.5;cursor:wait}small,p{color:#52675c;line-height:1.6}#status{white-space:pre-wrap}summary{cursor:pointer}
-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}#logout{background:transparent;color:#216b50;border:1px solid #adbeb2;padding:8px 12px;white-space:nowrap;margin-left:auto}
-.toolbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap}.toolbar label{margin:0}.secondary{background:transparent;color:#216b50;border:1px solid #adbeb2;padding:8px 12px}
-.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:20px 0}.metrics div{min-width:0}.metrics dt{font-size:13px;color:#52675c}.metrics dd{margin:5px 0 0;font-size:16px;overflow-wrap:anywhere}
-#log-output{max-height:320px;min-height:140px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;background:#182b23;color:#e1f0e6;border-radius:6px;padding:12px;font:12px/1.6 monospace}#log-panel>summary{font-size:20px;font-weight:700}
-</style>
-<header><h1>小米净水器监视器</h1><button id="logout" type="button" hidden>退出登录</button></header><p>设置保存在监视器中，重启和固件升级后仍会保留。</p>
-<p id="status" role="status">正在读取设置…</p>
-<section><h2>连接与显示</h2>
-<form id="config" autocomplete="off">
-<label>Wi-Fi 名称<input name="wifi_ssid" maxlength="32" required></label>
-<label>Wi-Fi 密码<input name="wifi_password" type="password" maxlength="64" placeholder="留空保留原密码" autocomplete="new-password"></label>
-<label><input name="open_wifi" type="checkbox"> 使用无密码 Wi-Fi（清除原密码）</label>
-<label>净水器 IP<input name="device_ip" inputmode="decimal" placeholder="192.168.1.100" required></label>
-<label>净水器 Token<input name="token" type="password" maxlength="32" placeholder="32 位十六进制；留空保留原值" autocomplete="new-password"></label>
-<label>管理密码<input name="admin_password" type="password" maxlength="64" placeholder="首次设置必填；以后留空保留" autocomplete="new-password"></label>
-<small>登录只需管理密码，不设最短长度。密码和 Token 不会从设备回填到网页。</small>
-<details><summary>显示、轮询及高级设置</summary><p>时间单位为毫秒；filter_display 可选 percent 或 litres。</p>
-<label>设置 JSON<textarea name="settings" spellcheck="false" required></textarea></label></details>
-<label id="initialize" hidden><input name="initialize_storage" type="checkbox"> 初始化设备存储（首次使用需要；会清空配置区）</label>
-<button id="save" disabled>保存并重启</button></form></section>
-<section><div class="toolbar"><h2>设备信息</h2><button id="system-refresh" class="secondary" type="button" disabled>刷新</button></div>
-<p id="system-status" role="status">页面载入时读取一次，点击刷新可更新当前数值。</p>
-<dl class="metrics">
-<div><dt>CPU 频率</dt><dd id="cpu-frequency">--</dd></div>
-<div><dt>运行时间</dt><dd id="uptime">--</dd></div>
-<div><dt>RAM 总量（应用 DRAM）</dt><dd id="ram-total">--</dd></div>
-<div><dt>RAM 可用（空闲堆）</dt><dd id="ram-free">--</dd></div>
-<div><dt>最大连续空闲堆</dt><dd id="ram-max">--</dd></div>
-<div><dt>堆碎片率</dt><dd id="heap-fragmentation">--</dd></div>
-<div><dt>Flash 容量（物理）</dt><dd id="flash-total">--</dd></div>
-<div><dt>当前固件大小</dt><dd id="firmware-size">--</dd></div>
-<div><dt>Flash 可用（OTA）</dt><dd id="flash-free">--</dd></div>
-<div><dt>文件系统容量</dt><dd id="fs-total">--</dd></div>
-<div><dt>文件系统可用</dt><dd id="fs-free">--</dd></div>
-<div><dt>Wi-Fi 信号</dt><dd id="wifi-signal">--</dd></div>
-<div><dt>局域网 IP</dt><dd id="local-ip">--</dd></div>
-<div><dt>Arduino 核心版本</dt><dd id="core-version">--</dd></div>
-</dl></section>
-<section><details id="log-panel"><summary>运行日志</summary><p>保留最近的运行记录，重启后清空。时间为启动后的秒数。</p>
-<div class="toolbar"><button id="log-refresh" class="secondary" type="button">刷新</button><label><input id="log-auto" type="checkbox" checked> 自动刷新（2 秒）</label></div>
-<p id="log-status" role="status">展开后读取日志。</p><pre id="log-output" tabindex="0" aria-label="设备运行日志">尚未读取日志</pre></details></section>
-<section><h2>固件升级</h2><p>选择本项目的 .bin 固件即可。升级保留配置，无需上传 littlefs.bin。</p>
-<form id="ota" method="post" enctype="multipart/form-data">
-<label>应用固件<input type="file" name="firmware" accept=".bin" required></label>
-<button id="upgrade" disabled>上传并升级</button></form><p>上传期间保持供电，完成后设备自动重启。</p></section>
+<script>(function(){
+ let mode='system';try{const saved=localStorage.getItem('purifier-theme');if(['system','light','dark'].includes(saved))mode=saved;}catch(e){}
+ const media=matchMedia('(prefers-color-scheme: dark)');
+ function apply(){document.documentElement.dataset.theme=mode==='system'?(media.matches?'dark':'light'):mode;document.documentElement.dataset.themeMode=mode;}
+ apply();media.addEventListener('change',()=>{if(mode==='system')apply();});
+ document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('[data-theme-picker]').forEach(picker=>{
+ picker.value=mode;picker.addEventListener('change',()=>{mode=picker.value;apply();try{localStorage.setItem('purifier-theme',mode);}catch(e){}});
+ });});
+})();</script><style>:root{color-scheme:light;--bg:#f4f7f5;--surface:#fff;--sidebar:#fafcfb;--text:#1b3328;--muted:#5d7065;--border:#dce5df;--accent:#24694e;--on-accent:#fff;--soft:#e7f1eb;--field:#fff;--log-bg:#f0f5f2;--log-text:#244d37;--danger:#a63d35;--danger-bg:#fff0ed;--shadow:0 12px 36px #142b1d0c;font:15px/1.5 system-ui,-apple-system,sans-serif}
+:root[data-theme=dark]{color-scheme:dark;--bg:#101813;--surface:#19251e;--sidebar:#141f18;--text:#e2eee6;--muted:#9eb2a5;--border:#2e4034;--accent:#8bd3a8;--on-accent:#10291b;--soft:#233e2d;--field:#132018;--log-bg:#0c1510;--log-text:#c1e3ce;--danger:#ffb0a4;--danger-bg:#3c2422;--shadow:0 12px 36px #0002}
+*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;color:var(--text);background:var(--bg)}button,input,select,textarea{font:inherit}button,a,input,select,textarea{ -webkit-tap-highlight-color:transparent}button{cursor:pointer}button:disabled{cursor:wait;opacity:.55}a{color:var(--accent)}button{border:0}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:3px}h1,h2,h3,p{margin:0}svg{width:20px;height:20px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.muted,small{color:var(--muted)}small{font-size:12px;line-height:1.6}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 16px;border-radius:8px;background:var(--accent);color:var(--on-accent);font-weight:600}.btn.secondary{border:1px solid var(--border);background:var(--surface);color:var(--text)}.icon-btn{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:8px;color:var(--text);background:transparent}.icon-btn:hover{background:var(--soft)}input:not([type=checkbox]):not([type=file]),select,textarea{width:100%;padding:11px 12px;background:var(--field);color:var(--text);border:1px solid var(--border);border-radius:8px}input::placeholder{color:var(--muted);opacity:.85}input[type=checkbox]{accent-color:var(--accent)}.theme-control{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px;color:var(--muted)}.theme-control select{width:auto;padding:7px 9px;max-width:150px}.brand-icon{display:grid;place-items:center;background:var(--accent);color:var(--on-accent);border-radius:11px;width:40px;height:40px;flex-shrink:0}.brand-icon svg{width:25px;height:25px}.notice{padding:13px 16px;background:var(--soft);border:1px solid var(--border);border-radius:9px;font-size:14px;margin-bottom:20px;white-space:pre-wrap}.notice.error{color:var(--danger);background:var(--danger-bg)}@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
+.sidebar{overflow-y:auto;position:fixed;inset:0 auto 0 0;width:248px;background:var(--sidebar);border-right:1px solid var(--border);padding:28px 18px 20px;display:flex;flex-direction:column;z-index:50}.brand{display:flex;align-items:center;gap:12px;padding:0 8px 30px}.brand strong{font-size:15px;letter-spacing:-.03em}.brand small{display:block;font-size:11px;margin-top:3px;letter-spacing:.06em}.nav-label{font-size:11px;color:var(--muted);padding:0 14px;margin-bottom:10px}.nav{display:grid;gap:6px}.nav a{display:flex;align-items:center;gap:12px;color:var(--muted);text-decoration:none;border-radius:9px;padding:12px 14px;font-size:14px}.nav a:hover{background:var(--soft);color:var(--text)}.nav a[aria-current=page]{color:var(--accent);background:var(--soft);font-weight:650}.sidebar-footer{margin-top:auto;border-top:1px solid var(--border);padding:20px 8px 0;display:grid;gap:16px}#logout{justify-content:flex-start;padding-left:0;background:transparent;color:var(--muted);font-weight:400}.sidebar-note{font-size:11px;color:var(--muted)}#drawer-close,#menu-toggle{display:none}.backdrop{position:fixed;inset:0;background:#07120c80;z-index:40;border-radius:0}
+.topbar{height:76px;margin-left:248px;padding:0 40px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--surface)}.topbar-label{font-size:13px;color:var(--muted)}.topbar-left{display:flex;align-items:center;gap:12px}.connection-badge{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:12px;white-space:nowrap}.dot{width:6px;height:6px;background:var(--muted);border-radius:50%}.connection-badge.ready .dot{background:var(--accent)}
+.main{margin-left:248px;padding:34px 40px 48px;max-width:1460px}.page-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:28px}h1{font-size:27px;line-height:1.25;letter-spacing:-.04em;font-weight:650}#page-description{margin-top:9px;font-size:13px;color:var(--muted)}#page-title:focus{outline:none}.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px}.card h2{font-size:16px;font-weight:650}.card p.hint{color:var(--muted);font-size:13px;line-height:1.7;margin-top:8px}.stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:20px}.stat{padding:20px}.stat-label{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}.stat-label svg{width:16px;height:16px}.stat-value{font-size:26px;line-height:1.2;font-weight:650;letter-spacing:-.04em;font-variant-numeric:tabular-nums;margin:16px 0 7px}.stat small{font-size:11px}#uptime{font-size:20px;line-height:1.55}.overview-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:20px}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 24px;margin:24px 0 0}.metrics div{min-width:0}.metrics dt{font-size:12px;color:var(--muted);margin-bottom:6px}.metrics dd{margin:0;font-size:15px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.metrics.single{grid-template-columns:1fr}#system-status{font-size:12px;color:var(--muted);margin-top:18px}.form-stack{display:grid;gap:18px;max-width:850px}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:20px}.field{display:grid;gap:8px;font-size:13px;font-weight:550;min-width:0}.field small{font-weight:400}.check{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-top:16px}.advanced{padding:0}.advanced summary{cursor:pointer;padding:20px 24px;font-size:14px;font-weight:600}.advanced-content{padding:0 24px 24px}.advanced-content p{margin-bottom:14px}textarea{min-height:260px;resize:vertical;font:12px/1.7 ui-monospace,monospace}.form-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:4px 0}.form-actions small{max-width:440px}.log-card{padding:0;overflow:hidden}.log-toolbar{padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--border)}.log-controls{display:flex;align-items:center;gap:16px}.log-controls .check{margin:0}#log-output{margin:0;min-height:360px;max-height:65svh;overflow:auto;padding:22px;white-space:pre-wrap;overflow-wrap:anywhere;background:var(--log-bg);color:var(--log-text);font:12px/1.8 ui-monospace,SFMono-Regular,monospace}#log-status{font-size:12px;color:var(--muted)}.caption{font-size:12px;color:var(--muted);margin-top:14px}.update-card{max-width:720px}.upload-zone{padding:30px 22px;background:var(--bg);border:1px dashed var(--border);border-radius:10px;margin:24px 0;display:grid;gap:12px}.upload-zone>svg{width:28px;height:28px;color:var(--accent)}.upload-zone strong{font-size:14px}.upload-zone input{max-width:100%;font-size:13px;color:var(--muted)}input[type=file]::file-selector-button{padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);margin-right:12px;cursor:pointer}#upload-progress{width:100%;height:7px;accent-color:var(--accent);margin:20px 0 6px}#upload-status{font-size:13px;color:var(--muted);margin-top:14px}.section-spacer{margin-top:18px}
+@media(max-width:1120px){.main{padding:28px}.topbar{padding:0 28px}.stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.overview-grid{grid-template-columns:1fr}.metrics.single{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.sidebar{width:min(300px,86vw);transform:translateX(-100%);transition:transform .18s ease;box-shadow:var(--shadow)}body.drawer-open .sidebar{transform:translateX(0)}body.drawer-open{overflow:hidden}.brand{padding-right:28px}#drawer-close{display:grid;position:absolute;right:10px;top:12px}#menu-toggle{display:inline-grid}.topbar{margin-left:0;height:68px;padding:0 16px}.topbar-label{font-size:12px;color:var(--text)}.connection-badge{font-size:11px}.main{margin-left:0;padding:26px 18px 32px}.page-heading{margin-bottom:22px}h1{font-size:24px}.card{padding:20px}.stat{padding:18px}.stat-grid{gap:12px;margin-bottom:16px}.stat-value{font-size:24px}.stat small{font-size:11px}.overview-grid{gap:16px}.form-grid{grid-template-columns:1fr}.metrics{gap:20px 16px}.advanced{padding:0}.advanced summary{padding:18px 20px}.advanced-content{padding:0 20px 20px}.log-card{padding:0}.log-toolbar{padding:15px 18px}.log-controls{gap:12px}#log-output{padding:18px;min-height:300px;font-size:11px}.log-controls .check{font-size:12px}.upload-zone{padding:22px 16px}#uptime{font-size:17px}}
+</style></head><body>
+<button id="backdrop" class="backdrop" type="button" hidden tabindex="-1" aria-label="关闭导航"></button>
+<aside id="sidebar" class="sidebar" aria-label="主导航">
+<button id="drawer-close" class="icon-btn" type="button" aria-label="关闭导航"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+<div class="brand"><div class="brand-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3C9 7 5 11 5 15a7 7 0 0 0 14 0c0-4-4-8-7-12Z"/><path d="M8 15a4 4 0 0 0 4 4"/></svg></div><div><strong>小米净水器监视器</strong><small>MR532-D / LX7</small></div></div>
+<p class="nav-label">设备管理</p><nav class="nav" aria-label="功能导航">
+<a href="#overview" data-route="overview" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>设备概览</a>
+<a href="#logs" data-route="logs"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>运行日志</a>
+<a href="#settings" data-route="settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="2" fill="var(--sidebar)"/><circle cx="16" cy="12" r="2" fill="var(--sidebar)"/><circle cx="10" cy="18" r="2" fill="var(--sidebar)"/></svg>连接与设置</a>
+<a href="#update" data-route="update"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5h16v-5"/></svg>固件升级</a>
+</nav><div class="sidebar-footer">
+<label class="theme-control"><span>外观</span><select data-theme-picker aria-label="外观模式"><option value="system">跟随系统</option><option value="light">浅色</option><option value="dark">深色</option></select></label>
+<button class="btn" id="logout" type="button" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H4v16h6m4-4 4-4-4-4m-6 4h10"/></svg>退出登录</button>
+<p class="sidebar-note">ESP8266 · 本地设备管理</p></div></aside>
+<header class="topbar" id="topbar"><div class="topbar-left"><button id="menu-toggle" class="icon-btn" type="button" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><span class="topbar-label">小米净水器监视器</span></div><span id="connection" class="connection-badge"><span class="dot" aria-hidden="true"></span><span id="connection-label">正在连接</span></span></header>
+<main id="main-content" class="main">
+<div class="page-heading"><div><h1 id="page-title" tabindex="-1">设备概览</h1><p id="page-description">查看监视器的系统资源与连接信息。</p></div><button id="system-refresh" class="btn secondary" type="button" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6 7a7 7 0 0 1 12-1l2 3M4 15l2 3a7 7 0 0 0 12-1"/></svg>刷新</button></div>
+<div id="status" class="notice" role="status" hidden></div>
+<section id="view-overview" class="view" aria-label="设备概览">
+<div class="stat-grid">
+<article class="card stat"><p class="stat-label">CPU 频率</p><p class="stat-value" id="cpu-frequency">--</p><small>ESP8266 工作频率</small></article>
+<article class="card stat"><p class="stat-label">可用 RAM</p><p class="stat-value" id="ram-free">--</p><small>当前空闲堆内存</small></article>
+<article class="card stat"><p class="stat-label">OTA 可用空间</p><p class="stat-value" id="flash-free">--</p><small>应用固件升级空间</small></article>
+<article class="card stat"><p class="stat-label">运行时间</p><p class="stat-value" id="uptime">--</p><small>自本次启动以来</small></article>
+</div><div class="overview-grid">
+<section class="card"><h2>内存与存储</h2><p class="hint">RAM 为应用 DRAM，Flash 按分区分别统计。</p><dl class="metrics">
+<div><dt>RAM 总量（应用 DRAM）</dt><dd id="ram-total">--</dd></div><div><dt>最大连续空闲堆</dt><dd id="ram-max">--</dd></div>
+<div><dt>堆碎片率</dt><dd id="heap-fragmentation">--</dd></div><div><dt>Flash 容量（物理）</dt><dd id="flash-total">--</dd></div>
+<div><dt>当前固件大小</dt><dd id="firmware-size">--</dd></div><div><dt>文件系统容量</dt><dd id="fs-total">--</dd></div>
+<div><dt>文件系统可用</dt><dd id="fs-free">--</dd></div></dl></section>
+<section class="card"><h2>连接与系统</h2><p class="hint">当前网络连接和运行环境。</p><dl class="metrics single">
+<div><dt>Wi-Fi 信号</dt><dd id="wifi-signal">--</dd></div><div><dt>局域网 IP</dt><dd id="local-ip">--</dd></div><div><dt>Arduino 核心版本</dt><dd id="core-version">--</dd></div></dl></section>
+</div><p id="system-status">进入概览或点击刷新时读取，不在后台轮询。</p></section>
+<section id="view-logs" class="view" aria-label="运行日志" hidden>
+<div class="card log-card"><div class="log-toolbar"><span id="log-status" role="status">正在读取日志…</span><div class="log-controls"><label class="check"><input id="log-auto" type="checkbox" checked>自动刷新（2 秒）</label><button id="log-refresh" class="btn secondary" type="button">刷新</button></div></div><pre id="log-output" tabindex="0" aria-label="设备运行日志">尚未读取日志</pre></div>
+<p class="caption">保留最近的运行记录 · 时间为启动后的秒数 · 重启后清空</p></section>
+<section id="view-settings" class="view" aria-label="连接与设置" hidden><form id="config" class="form-stack" autocomplete="off">
+<section class="card"><h2>Wi-Fi 网络</h2><p class="hint">监视器用于连接家庭网络的凭据。</p><div class="form-grid">
+<label class="field">Wi-Fi 名称<input name="wifi_ssid" maxlength="32" required placeholder="输入 Wi-Fi 名称"></label>
+<label class="field">Wi-Fi 密码<input name="wifi_password" type="password" maxlength="64" placeholder="留空保留原密码" autocomplete="new-password"></label></div>
+<label class="check"><input name="open_wifi" type="checkbox">使用无密码 Wi-Fi（清除原密码）</label></section>
+<section class="card"><h2>净水器连接</h2><p class="hint">通过局域网读取小米净水器的数据。</p><div class="form-grid">
+<label class="field">净水器 IP<input name="device_ip" inputmode="decimal" placeholder="192.168.1.100" required></label>
+<label class="field">净水器 Token<input name="token" type="password" maxlength="32" placeholder="32 位十六进制；留空保留" autocomplete="new-password"></label></div></section>
+<section class="card"><h2>管理密码</h2><p class="hint">登录只需密码，不设最短长度。</p><div class="form-grid"><label class="field">新管理密码<input name="admin_password" type="password" maxlength="64" placeholder="首次设置必填；以后留空保留" autocomplete="new-password"></label></div></section>
+<details class="card advanced"><summary>显示、轮询及高级设置</summary><div class="advanced-content"><p class="hint">时间单位为毫秒；filter_display 可选 percent 或 litres。</p><label class="field">设置 JSON<textarea name="settings" spellcheck="false" required></textarea></label></div></details>
+<section id="initialize" class="card" hidden><h2>初始化存储</h2><p class="hint">首次使用需初始化设备存储，将清空配置区。</p><label class="check"><input name="initialize_storage" type="checkbox">初始化设备存储</label></section>
+<div class="form-actions"><button class="btn" id="save" disabled>保存并重启</button><small>密码和 Token 留空保留原值，不会从设备回填到页面。</small></div>
+</form></section>
+<section id="view-update" class="view" aria-label="固件升级" hidden><section class="card update-card"><h2>上传应用固件</h2><p class="hint">升级会保留当前设置。选择本项目的 .bin 文件即可。</p>
+<form id="ota" method="post" enctype="multipart/form-data"><label class="upload-zone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5h16v-5"/></svg><strong>选择固件文件</strong><small>xiaomi-purifier-lx7-monitor-nodemcuv2.bin</small><input type="file" name="firmware" accept=".bin" required aria-label="应用固件"></label>
+<button class="btn" id="upgrade" disabled>上传并升级</button></form><progress id="upload-progress" max="100" value="0" hidden aria-label="固件上传进度"></progress><p id="upload-status" role="status">上传期间请保持设备供电。</p></section></section>
+</main>
 <script>
-const form=document.querySelector('#config'),status=document.querySelector('#status');
-let csrf='';
-let pageBusy=false;
-const logPanel=document.querySelector('#log-panel'),logOutput=document.querySelector('#log-output'),logStatus=document.querySelector('#log-status'),logAuto=document.querySelector('#log-auto');
-let logTimer=0,logLoading=false,systemLoading=false;
+const form=document.querySelector('#config'),status=document.querySelector('#status'),main=document.querySelector('#main-content'),sidebar=document.querySelector('#sidebar'),topbar=document.querySelector('#topbar'),menuButton=document.querySelector('#menu-toggle'),backdrop=document.querySelector('#backdrop');
+const mobile=matchMedia('(max-width: 760px)'),routes={overview:['设备概览','查看监视器的系统资源与连接信息。'],logs:['运行日志','查看 Wi-Fi、MiIO 通信与设备运行事件。'],settings:['连接与设置','管理网络、净水器连接和屏幕参数。'],update:['固件升级','通过局域网更新监视器固件。']};
+let csrf='',pageBusy=false,configLoaded=false,activeView='overview',drawerOpen=false,logTimer=0,logLoading=false,systemLoading=false;
+const logOutput=document.querySelector('#log-output'),logStatus=document.querySelector('#log-status'),logAuto=document.querySelector('#log-auto');
+function showNotice(text,error=false){status.textContent=text;status.hidden=false;status.classList.toggle('error',error);}
+function setDrawer(open,restore=true){drawerOpen=Boolean(open&&mobile.matches);document.body.classList.toggle('drawer-open',drawerOpen);backdrop.hidden=!drawerOpen;menuButton.setAttribute('aria-expanded',String(drawerOpen));sidebar.inert=mobile.matches&&!drawerOpen;main.inert=drawerOpen;topbar.inert=drawerOpen;
+ if(mobile.matches){sidebar.setAttribute('aria-hidden',String(!drawerOpen));if(drawerOpen){sidebar.setAttribute('role','dialog');sidebar.setAttribute('aria-modal','true');}else{sidebar.removeAttribute('role');sidebar.removeAttribute('aria-modal');}}
+ else{sidebar.removeAttribute('aria-hidden');sidebar.removeAttribute('role');sidebar.removeAttribute('aria-modal');}
+ if(drawerOpen)(sidebar.querySelector('[aria-current=page]')||document.querySelector('#drawer-close')).focus();else if(restore&&mobile.matches)menuButton.focus();}
+menuButton.addEventListener('click',()=>setDrawer(true));document.querySelector('#drawer-close').addEventListener('click',()=>setDrawer(false));backdrop.addEventListener('click',()=>setDrawer(false));mobile.addEventListener('change',()=>setDrawer(false,false));setDrawer(false,false);
+document.addEventListener('keydown',e=>{if(!drawerOpen)return;if(e.key==='Escape'){e.preventDefault();setDrawer(false);return;}if(e.key==='Tab'){const items=Array.from(sidebar.querySelectorAll('a,button:not([disabled]),select')).filter(el=>!el.hidden&&el.getClientRects().length),first=items[0],last=items[items.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
 function stopLogRefresh(){clearTimeout(logTimer);logTimer=0;}
-function scheduleLogRefresh(){stopLogRefresh();if(logPanel.open&&logAuto.checked&&!document.hidden&&!pageBusy)logTimer=setTimeout(refreshLogs,2000);}
+function scheduleLogRefresh(){stopLogRefresh();if(activeView==='logs'&&logAuto.checked&&!document.hidden&&!pageBusy)logTimer=setTimeout(refreshLogs,2000);}
 function loginRequired(r){if(r.status!==401)return false;pageBusy=true;stopLogRefresh();location.replace('/login');return true;}
+function routeFromHash(){const value=location.hash.slice(1);return Object.prototype.hasOwnProperty.call(routes,value)?value:null;}
+function activate(view,focus=false){stopLogRefresh();activeView=view;Object.keys(routes).forEach(name=>document.getElementById('view-'+name).hidden=name!==view);document.querySelectorAll('[data-route]').forEach(link=>{if(link.dataset.route===view)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');});
+ document.querySelector('#page-title').textContent=routes[view][0];document.querySelector('#page-description').textContent=routes[view][1];document.querySelector('#system-refresh').hidden=view!=='overview';setDrawer(false,false);window.scrollTo(0,0);if(focus)document.querySelector('#page-title').focus({preventScroll:true});
+ if(configLoaded){if(view==='overview')refreshSystem();else if(view==='logs')refreshLogs();}}
+document.querySelectorAll('[data-route]').forEach(link=>link.addEventListener('click',e=>{e.preventDefault();if(pageBusy)return;const view=link.dataset.route;if(location.hash!=='#'+view)history.pushState(null,'','#'+view);activate(view,true);}));
+window.addEventListener('popstate',()=>{if(!pageBusy)activate(routeFromHash()||'overview',true);});window.addEventListener('hashchange',()=>{const view=routeFromHash()||'overview';if(!pageBusy&&view!==activeView)activate(view,true);});
 const setText=(id,value)=>document.getElementById(id).textContent=value;
 function bytes(n){if(typeof n!=='number'||!Number.isFinite(n))return '--';return n>=1048576?(n/1048576).toFixed(2)+' MiB':n>=1024?(n/1024).toFixed(1)+' KiB':n+' B';}
 function uptime(n){const days=Math.floor(n/86400),hours=Math.floor(n/3600)%24,minutes=Math.floor(n/60)%60;return(days?days+' 天 ':'')+hours+' 时 '+minutes+' 分 '+Math.floor(n%60)+' 秒';}
 async function refreshSystem(){if(systemLoading||pageBusy)return;systemLoading=true;document.querySelector('#system-refresh').disabled=true;
  try{const r=await fetch('/api/system',{cache:'no-store'});if(loginRequired(r))return;if(!r.ok)throw Error('读取失败：'+r.status);const c=await r.json();
- setText('cpu-frequency',c.cpu_mhz+' MHz');setText('uptime',uptime(c.uptime_seconds));setText('ram-total',bytes(c.ram_total_bytes));setText('ram-free',bytes(c.heap_free_bytes));
- setText('ram-max',bytes(c.heap_max_block_bytes));setText('heap-fragmentation',c.heap_fragmentation_percent+'%');setText('flash-total',bytes(c.flash_total_bytes));
- setText('firmware-size',bytes(c.firmware_bytes));setText('flash-free',bytes(c.ota_free_bytes));setText('fs-total',c.filesystem_ready?bytes(c.filesystem_total_bytes):'未初始化');
- setText('fs-free',c.filesystem_ready?bytes(c.filesystem_free_bytes):'未初始化');setText('wifi-signal',c.wifi_rssi_dbm===null?'未连接':c.wifi_rssi_dbm+' dBm');
- setText('local-ip',c.local_ip||'未连接');setText('core-version',c.core_version);setText('system-status','已更新；点击刷新可读取当前数值。');}
+ setText('cpu-frequency',c.cpu_mhz+' MHz');setText('uptime',uptime(c.uptime_seconds));setText('ram-total',bytes(c.ram_total_bytes));setText('ram-free',bytes(c.heap_free_bytes));setText('ram-max',bytes(c.heap_max_block_bytes));setText('heap-fragmentation',c.heap_fragmentation_percent+'%');setText('flash-total',bytes(c.flash_total_bytes));setText('firmware-size',bytes(c.firmware_bytes));setText('flash-free',bytes(c.ota_free_bytes));setText('fs-total',c.filesystem_ready?bytes(c.filesystem_total_bytes):'未初始化');setText('fs-free',c.filesystem_ready?bytes(c.filesystem_free_bytes):'未初始化');setText('wifi-signal',c.wifi_rssi_dbm===null?'未连接':c.wifi_rssi_dbm+' dBm');setText('local-ip',c.local_ip||'未连接');setText('core-version',c.core_version);setText('system-status','当前快照 · '+new Date().toLocaleTimeString()+' 更新');}
  catch(e){setText('system-status','读取失败：'+e.message);}finally{systemLoading=false;document.querySelector('#system-refresh').disabled=false;}}
-async function refreshLogs(){stopLogRefresh();if(logLoading||pageBusy)return;logLoading=true;document.querySelector('#log-refresh').disabled=true;
+async function refreshLogs(){stopLogRefresh();if(logLoading||pageBusy||activeView!=='logs')return;logLoading=true;document.querySelector('#log-refresh').disabled=true;
  const follow=logOutput.scrollHeight-logOutput.scrollTop-logOutput.clientHeight<24;
- try{const r=await fetch('/api/logs',{cache:'no-store'});if(loginRequired(r))return;if(!r.ok)throw Error('读取失败：'+r.status);logOutput.textContent=(await r.text())||'暂无运行日志';
- if(follow)logOutput.scrollTop=logOutput.scrollHeight;logStatus.textContent='已刷新';}
+ try{const r=await fetch('/api/logs',{cache:'no-store'});if(loginRequired(r))return;if(!r.ok)throw Error('读取失败：'+r.status);logOutput.textContent=(await r.text())||'暂无运行日志';if(follow)logOutput.scrollTop=logOutput.scrollHeight;logStatus.textContent='已更新 · '+new Date().toLocaleTimeString();}
  catch(e){logStatus.textContent='读取失败：'+e.message;}finally{logLoading=false;document.querySelector('#log-refresh').disabled=false;scheduleLogRefresh();}}
-document.querySelector('#system-refresh').addEventListener('click',refreshSystem);
-document.querySelector('#log-refresh').addEventListener('click',refreshLogs);
-logPanel.addEventListener('toggle',()=>{if(logPanel.open)refreshLogs();else stopLogRefresh();});
-logAuto.addEventListener('change',()=>{if(logAuto.checked&&logPanel.open)refreshLogs();else stopLogRefresh();});
-document.addEventListener('visibilitychange',()=>{if(document.hidden)stopLogRefresh();else if(logPanel.open&&logAuto.checked)refreshLogs();});
-fetch('/api/config',{cache:'no-store'}).then(async r=>{if(r.status===401){location.replace('/login');throw Error('请重新登录');}if(!r.ok)throw Error('读取失败：'+r.status);return r.json()}).then(c=>{
- csrf=c.csrf;form.elements.wifi_ssid.value=c.wifi_ssid;form.elements.device_ip.value=c.device_ip;
- form.elements.settings.value=JSON.stringify(c.settings,null,2);form.elements.token.required=!c.has_token;
- form.elements.admin_password.required=!c.has_admin_password;
- document.querySelector('#initialize').hidden=c.storage_ready;
- document.querySelector('#save').disabled=false;
- document.querySelector('#upgrade').disabled=!c.has_admin_password;
- document.querySelector('#logout').hidden=c.setup_access;
- document.querySelector('#ota').action='/update?csrf='+encodeURIComponent(csrf);
- refreshSystem();
- status.textContent=c.has_admin_password?'设置已读取。':'请设置 Wi-Fi、净水器连接信息和管理密码。';
-}).catch(e=>status.textContent=e.message);
-form.addEventListener('submit',async e=>{e.preventDefault();const save=document.querySelector('#save');
- try{const fields=Object.fromEntries(new FormData(form));fields.settings=JSON.parse(fields.settings);
- fields.open_wifi=form.elements.open_wifi.checked;fields.initialize_storage=form.elements.initialize_storage.checked;
- pageBusy=true;stopLogRefresh();save.disabled=true;const r=await fetch('/config?csrf='+encodeURIComponent(csrf),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(fields)});
- if(r.status===401){location.replace('/login');return;}const text=await r.text();if(!r.ok)throw Error(text);status.textContent='已保存，正在重启。请重新连接 Wi-Fi 后打开设备页面。';}
- catch(e){status.textContent='保存失败：'+e.message;save.disabled=false;pageBusy=false;scheduleLogRefresh();}});
-document.querySelector('#logout').addEventListener('click',async()=>{
- const button=document.querySelector('#logout');button.disabled=true;pageBusy=true;stopLogRefresh();
- try{const r=await fetch('/logout?csrf='+encodeURIComponent(csrf),{method:'POST'});
- if(!r.ok&&r.status!==401)throw Error(await r.text());location.replace('/login');}
- catch(e){status.textContent='退出失败：'+e.message;button.disabled=false;pageBusy=false;scheduleLogRefresh();}});
-document.querySelector('#ota').addEventListener('submit',()=>{pageBusy=true;stopLogRefresh();document.querySelector('#upgrade').disabled=true;status.textContent='正在上传固件，请保持供电…';});
-</script></html>)HTML";
+document.querySelector('#system-refresh').addEventListener('click',refreshSystem);document.querySelector('#log-refresh').addEventListener('click',refreshLogs);logAuto.addEventListener('change',()=>{if(logAuto.checked&&activeView==='logs')refreshLogs();else{stopLogRefresh();logStatus.textContent='已暂停自动刷新';}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stopLogRefresh();else if(activeView==='logs'&&logAuto.checked)refreshLogs();});
+fetch('/api/config',{cache:'no-store'}).then(async r=>{if(loginRequired(r))throw Error('请重新登录');if(!r.ok)throw Error('读取失败：'+r.status);return r.json()}).then(c=>{
+ csrf=c.csrf;form.elements.wifi_ssid.value=c.wifi_ssid;form.elements.device_ip.value=c.device_ip;form.elements.settings.value=JSON.stringify(c.settings,null,2);form.elements.token.required=!c.has_token;form.elements.admin_password.required=!c.has_admin_password;document.querySelector('#initialize').hidden=c.storage_ready;document.querySelector('#save').disabled=false;document.querySelector('#upgrade').disabled=!c.has_admin_password;document.querySelector('#logout').hidden=c.setup_access;document.querySelector('#ota').action='/update?csrf='+encodeURIComponent(csrf);document.querySelector('#connection').classList.add('ready');setText('connection-label',c.setup_access?'设置热点':'局域网管理');configLoaded=true;
+ const initial=routeFromHash()||(c.setup_access||!c.has_admin_password?'settings':'overview');history.replaceState(null,'','#'+initial);activate(initial);
+ if(!c.has_admin_password)showNotice('请先填写连接信息和管理密码，保存后设备会自动重启。');
+}).catch(e=>showNotice(e.message,true));
+form.addEventListener('invalid',e=>{const details=e.target.closest('details');if(details)details.open=true;},true);
+form.addEventListener('submit',async e=>{e.preventDefault();if(pageBusy)return;const save=document.querySelector('#save');
+ try{const fields=Object.fromEntries(new FormData(form));fields.settings=JSON.parse(fields.settings);fields.open_wifi=form.elements.open_wifi.checked;fields.initialize_storage=form.elements.initialize_storage.checked;pageBusy=true;stopLogRefresh();save.disabled=true;const r=await fetch('/config?csrf='+encodeURIComponent(csrf),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(fields)});
+ if(loginRequired(r))return;const text=await r.text();if(!r.ok)throw Error(text);showNotice('已保存，设备正在重启。请连接设置的 Wi-Fi 后重新打开管理页面。');}
+ catch(e){showNotice('保存失败：'+e.message,true);save.disabled=false;pageBusy=false;scheduleLogRefresh();}});
+document.querySelector('#logout').addEventListener('click',async()=>{if(pageBusy)return;setDrawer(false);const button=document.querySelector('#logout');button.disabled=true;pageBusy=true;stopLogRefresh();
+ try{const r=await fetch('/logout?csrf='+encodeURIComponent(csrf),{method:'POST'});if(!r.ok&&r.status!==401)throw Error(await r.text());location.replace('/login');}
+ catch(e){showNotice('退出失败：'+e.message,true);button.disabled=false;pageBusy=false;scheduleLogRefresh();}});
+document.querySelector('#ota').addEventListener('submit',e=>{e.preventDefault();if(pageBusy)return;const file=e.currentTarget.elements.firmware.files[0];if(!file||!file.name.endsWith('.bin')){setText('upload-status','请选择 .bin 应用固件。');return;}pageBusy=true;stopLogRefresh();document.querySelector('#upgrade').disabled=true;const progress=document.querySelector('#upload-progress');progress.hidden=false;progress.value=0;setText('upload-status','正在上传，请保持设备供电…');
+ const xhr=new XMLHttpRequest();xhr.open('POST','/update?csrf='+encodeURIComponent(csrf));xhr.upload.addEventListener('progress',event=>{if(event.lengthComputable){const percent=Math.round(event.loaded/event.total*100);progress.value=percent;setText('upload-status',percent<100?'正在上传 '+percent+'%':'上传完成，正在确认固件…');}});
+ function failed(message){pageBusy=false;document.querySelector('#upgrade').disabled=false;setText('upload-status','升级失败：'+message);}
+ xhr.addEventListener('load',()=>{if(xhr.status===401||(xhr.responseURL&&new URL(xhr.responseURL).pathname==='/login')){location.replace('/login');return;}if(xhr.status>=200&&xhr.status<300){progress.value=100;setText('upload-status','升级成功，设备正在重启。稍后刷新页面即可重新登录。');showNotice('固件升级完成，当前配置会保留。');}else failed(xhr.responseText||'设备返回错误');});
+ xhr.addEventListener('error',()=>failed('连接中断，请检查设备状态后重试。'));xhr.addEventListener('abort',()=>failed('上传已取消。'));xhr.send(new FormData(e.currentTarget));});
+</script></body></html>
+)HTML";
