@@ -51,8 +51,6 @@ bool parseConfig(JsonVariantConst doc, Config& out, const char*& error) {
   if (!strcmp(c.ssid, "YOUR_WIFI_SSID") || !strcmp(c.deviceIp, "192.0.2.1")) return false;
   if (!doc["admin_password"].isNull() &&
       !readText(doc["admin_password"], c.adminPassword, true)) return false;
-  const size_t adminSize = strlen(c.adminPassword);
-  if (adminSize && adminSize < 12) { error = "ADMIN PASSWORD TOO SHORT"; return false; }
   auto& s = c.settings;
   if (!readDuration(doc["poll_interval_ms"], s.pollIntervalMs, 500, 60000) ||
       !readDuration(doc["screen_off_delay_ms"], s.screenOffDelayMs, 0, 3600000) ||
@@ -154,7 +152,7 @@ bool mergeConfigUpdate(JsonVariantConst update, const Config& current, Config& o
   if (update["open_wifi"].as<bool>()) doc["wifi_password"] = "";
   Config candidate;
   if (!parseConfig(doc.as<JsonVariantConst>(), candidate, error)) return false;
-  if (strlen(candidate.adminPassword) < 12) { error = "SET ADMIN PASSWORD (12-64 BYTES)"; return false; }
+  if (!candidate.adminPassword[0]) { error = "SET ADMIN PASSWORD"; return false; }
   out = candidate;
   error = nullptr;
   return true;

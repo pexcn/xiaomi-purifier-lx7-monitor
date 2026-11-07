@@ -6,6 +6,6 @@ mkdir -p work/tests
   -fsanitize=address,undefined -fno-omit-frame-pointer -no-pie \
   -Itests/stubs -Iinclude -I.pio/libdeps/nodemcuv2/ArduinoJson/src \
   tests/test_main.cpp tests/crypto_openssl.cpp \
-  src/Controller.cpp src/Lx7Protocol.cpp src/MiioCodec.cpp src/MiioClient.cpp src/ConfigJson.cpp src/Config.cpp \
+  src/Controller.cpp src/Lx7Protocol.cpp src/MiioCodec.cpp src/MiioClient.cpp src/ConfigJson.cpp src/Config.cpp src/SessionAuth.cpp \
   -lcrypto -o work/tests/monitor-tests
 work/tests/monitor-tests

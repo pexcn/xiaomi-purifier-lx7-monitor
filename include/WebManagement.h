@@ -1,6 +1,7 @@
 #pragma once
 #include "Config.h"
 #include "Display.h"
+#include "SessionAuth.h"
 #include <ESP8266WebServer.h>
 
 class WebManagement {
@@ -11,7 +12,11 @@ class WebManagement {
   bool ownsDisplay(uint32_t now) const;
  private:
   bool allowed();
-  bool authorize();
+  bool setupAccess();
+  bool authorize(bool redirect = false);
+  void responseHeaders();
+  void login();
+  void logout();
   bool validCsrf();
   void openSetup(uint32_t now);
   void getConfig();
@@ -22,7 +27,8 @@ class WebManagement {
   Config& config_;
   Display& display_;
   ESP8266WebServer server_{80};
-  char hostname_[24] = {}, csrf_[33] = {};
+  SessionAuth sessions_;
+  char hostname_[24] = {}, csrf_[33] = {}, loginCsrf_[33] = {};
   bool configured_ = false, ap_ = false, mdns_ = false, wifiAnnounced_ = false;
   bool buttonHeld_ = false, buttonHandled_ = false, recoveryAttempted_ = false;
   bool uploading_ = false, uploadEnded_ = false;

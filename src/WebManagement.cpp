@@ -18,30 +18,76 @@ void randomHex(char* out, size_t bytes) {
 }
 }
 
-bool WebManagement::allowed() {
+bool WebManagement::setupAccess() {
   // Only clients reaching the AP interface may use physical-access recovery.
-  if (ap_ && server_.client().localIP() == WiFi.softAPIP()) return true;
-  return config_.adminPassword[0] && server_.authenticate("admin", config_.adminPassword);
+  return ap_ && server_.client().localIP() == WiFi.softAPIP();
 }
-bool WebManagement::authorize() {
+bool WebManagement::allowed() {
+  return setupAccess() || sessions_.accept(server_.header("Cookie").c_str(), millis());
+}
+void WebManagement::responseHeaders() {
   server_.sendHeader("Cache-Control", "no-store");
   server_.sendHeader("X-Frame-Options", "DENY");
   server_.sendHeader("X-Content-Type-Options", "nosniff");
+}
+bool WebManagement::authorize(bool redirect) {
+  responseHeaders();
   if (allowed()) return true;
-  server_.requestAuthentication(DIGEST_AUTH, "Purifier monitor");
+  if (redirect) {
+    server_.sendHeader("Location", "/login");
+    server_.send(303, "text/plain", "Login required");
+  } else server_.send(401, "text/plain; charset=utf-8", "请重新登录");
   return false;
 }
 bool WebManagement::validCsrf() { return server_.arg("csrf") == csrf_; }
+
+void WebManagement::login() {
+  responseHeaders();
+  if (server_.arg("csrf") != loginCsrf_) { server_.send(403, "text/plain; charset=utf-8", "请刷新登录页后重试"); return; }
+  const String password = server_.arg("password");
+  if (!passwordMatches(password.c_str(), config_.adminPassword)) {
+    server_.send(401, "text/plain; charset=utf-8", "密码不正确"); return;
+  }
+  char token[33];
+  randomHex(token, 16);
+  sessions_.logout(server_.header("Cookie").c_str());
+  sessions_.create(token, millis());
+  server_.sendHeader("Set-Cookie", String(SessionAuth::CookieName) + "=" + token + "; Path=/; HttpOnly; SameSite=Strict");
+  server_.send(200, "text/plain", "OK");
+}
+
+void WebManagement::logout() {
+  if (!authorize()) return;
+  if (!validCsrf()) { server_.send(403, "text/plain", "Reload the page and try again"); return; }
+  sessions_.logout(server_.header("Cookie").c_str());
+  server_.sendHeader("Set-Cookie", String(SessionAuth::CookieName) + "=; Path=/; Max-Age=0; HttpOnly; SameSite=Strict");
+  server_.send(200, "text/plain", "OK");
+}
 
 void WebManagement::begin(bool configured, uint32_t now) {
   configured_ = configured;
   wifiSeenAt_ = now;
   snprintf(hostname_, sizeof(hostname_), "purifier-%06x", ESP.getChipId());
   randomHex(csrf_, 16);
+  randomHex(loginCsrf_, 16);
   if (config_.sda != 0 && config_.scl != 0) pinMode(0, INPUT_PULLUP);
+  server_.collectHeaders("Cookie");
   server_.on("/", HTTP_GET, [this]() {
-    if (authorize()) server_.send_P(200, "text/html; charset=utf-8", ManagementPage);
+    if (authorize(true)) server_.send_P(200, "text/html; charset=utf-8", ManagementPage);
   });
+  server_.on("/login", HTTP_GET, [this]() {
+    responseHeaders();
+    if (allowed()) {
+      server_.sendHeader("Location", "/"); server_.send(303, "text/plain", "Already logged in");
+    } else server_.send_P(200, "text/html; charset=utf-8", LoginPage);
+  });
+  server_.on("/api/login", HTTP_GET, [this]() {
+    responseHeaders();
+    server_.send(200, "application/json", String("{\"csrf\":\"") + loginCsrf_ +
+        "\",\"has_admin_password\":" + (config_.adminPassword[0] ? "true}" : "false}"));
+  });
+  server_.on("/login", HTTP_POST, [this]() { login(); });
+  server_.on("/logout", HTTP_POST, [this]() { logout(); });
   server_.on("/api/config", HTTP_GET, [this]() { getConfig(); });
   server_.on("/config", HTTP_POST, [this]() { postConfig(); });
   server_.on("/update", HTTP_POST, [this]() { finishFirmware(); }, [this]() { uploadFirmware(); });
@@ -78,6 +124,7 @@ void WebManagement::getConfig() {
   doc["device_ip"] = config_.deviceIp;
   doc["has_token"] = config_.token[0] != 0;
   doc["has_admin_password"] = config_.adminPassword[0] != 0;
+  doc["setup_access"] = setupAccess();
   doc["storage_ready"] = configStorageReady();
   doc["csrf"] = csrf_;
   String body;
@@ -138,7 +185,7 @@ void WebManagement::uploadFirmware() {
 }
 
 void WebManagement::finishFirmware() {
-  if (!authorize()) {
+  if (!authorize(true)) {
     if (Update.isRunning()) Update.end();
     uploading_ = false;
     return;

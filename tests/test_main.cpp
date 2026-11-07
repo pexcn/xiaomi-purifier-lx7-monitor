@@ -5,6 +5,7 @@
 #include "MiioClient.h"
 #include "ConfigJson.h"
 #include <LittleFS.h>
+#include "SessionAuth.h"
 #include <array>
 #include <cassert>
 #include <cstdio>
@@ -51,9 +52,17 @@ void configTests() {
   update["settings"]["poll_interval_ms"] = -1;
   assert(!mergeConfigUpdate(update.as<JsonVariantConst>(), c, roundTrip, error));
   update["settings"].remove("poll_interval_ms");
-  update["admin_password"] = "short";
-  assert(!mergeConfigUpdate(update.as<JsonVariantConst>(), c, roundTrip, error));
+  update["admin_password"] = "1";
+  assert(mergeConfigUpdate(update.as<JsonVariantConst>(), c, roundTrip, error));
+  assert(!strcmp(roundTrip.adminPassword, "1"));
+  JsonDocument shortPassword;
+  configToJson(shortPassword, roundTrip, true);
+  assert(parseConfig(shortPassword.as<JsonVariantConst>(), roundTrip, error));
+  assert(!strcmp(roundTrip.adminPassword, "1"));
+  Config firstSetup = c;
+  firstSetup.adminPassword[0] = 0;
   update["admin_password"] = "";
+  assert(!mergeConfigUpdate(update.as<JsonVariantConst>(), firstSetup, roundTrip, error));
   update["device_ip"] = "192.0.2.256";
   assert(!mergeConfigUpdate(update.as<JsonVariantConst>(), c, roundTrip, error));
   update["device_ip"] = "192.0.2.2";
@@ -80,6 +89,46 @@ void configTests() {
   assert(LittleFS.files.at("/config.json") == original);
   assert(LittleFS.files.count("/.config.tmp") == 0);
   assert(loadConfig(roundTrip, error) && !strcmp(roundTrip.ssid, "test-network"));
+}
+
+void sessionTests() {
+  assert(passwordMatches("1", "1"));
+  assert(passwordMatches("短", "短"));
+  assert(!passwordMatches("2", "1"));
+  assert(!passwordMatches("", ""));
+  assert(!passwordMatches("", "1"));
+  const char* a = "00112233445566778899aabbccddeeff";
+  const char* b = "112233445566778899aabbccddeeff00";
+  const char* c = "2233445566778899aabbccddeeff0011";
+  const std::string cookieA = std::string(SessionAuth::CookieName) + "=" + a;
+  const std::string cookieB = std::string(SessionAuth::CookieName) + "=" + b;
+  const std::string cookieC = std::string(SessionAuth::CookieName) + "=" + c;
+  SessionAuth sessions;
+  assert(!sessions.accept(cookieA.c_str(), 0));
+  assert(!sessions.create("too-short", 0));
+  assert(sessions.create(a, 100));
+  assert(!sessions.accept(nullptr, 101));
+  assert(!sessions.accept("purifier_session=", 101));
+  assert(!sessions.accept(("other_" + cookieA).c_str(), 101));
+  assert(!sessions.accept((cookieA + "; " + cookieA).c_str(), 101));
+  assert(!sessions.accept(cookieB.c_str(), 101));
+  assert(sessions.accept(("other=1; " + cookieA + "; another=2").c_str(), 102));
+  assert(sessions.create(b, 200));
+  assert(sessions.accept(cookieB.c_str(), 201));
+  assert(sessions.create(c, 300)); // Oldest idle session is evicted; only two slots in RAM.
+  assert(!sessions.accept(cookieA.c_str(), 301));
+  assert(sessions.accept(cookieB.c_str(), 301));
+  assert(sessions.accept(cookieC.c_str(), 301));
+  sessions.logout(cookieB.c_str());
+  assert(!sessions.accept(cookieB.c_str(), 302));
+  assert(sessions.accept(cookieC.c_str(), 302));
+  assert(sessions.accept(cookieC.c_str(), 302 + SessionAuth::IdleTimeoutMs - 1));
+  assert(!sessions.accept(cookieC.c_str(), 301 + 2 * SessionAuth::IdleTimeoutMs));
+  const uint32_t start = UINT32_MAX - 500;
+  SessionAuth wrap;
+  assert(wrap.create(a, start));
+  assert(wrap.accept(cookieA.c_str(), start + 1000));
+  assert(!wrap.accept(cookieA.c_str(), start + 1000 + SessionAuth::IdleTimeoutMs));
 }
 
 Lx7Protocol::Result parse(const char* s, PurifierData& d, uint32_t id = 7) {
@@ -281,9 +330,10 @@ void transportTests() {
 
 int main() {
   configTests();
+  sessionTests();
   protocolTests();
   controllerTests();
   codecTests();
   transportTests();
-  puts("PASS: configuration migration/redaction/updates, lx7 parsing, screen timers, MiIO and UDP");
+  puts("PASS: short passwords, cookie sessions, configuration, screen timers, MiIO and UDP");
 }
