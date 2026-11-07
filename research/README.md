@@ -16,13 +16,10 @@
 | 文件 | 内容 |
 |---|---|
 | [docs/firmware.md](docs/firmware.md) | 环境、镜像结构、地址映射和 REA 限制 |
-| [docs/ota-download.md](docs/ota-download.md) | 下载脚本的首个命中规则及“最新版”判断限制 |
 | [docs/usedflow.md](docs/usedflow.md) | 流量统计证据、结论边界、只读验证方案 |
 | [docs/miio-api.md](docs/miio-api.md) | MiIO、串口接口、参数及风险 |
 | [docs/evidence/](docs/evidence/) | 表解析、SHA-256、精选真实反编译输出 |
 | [scripts/](scripts/) | 只读解析和 Ghidra 导出脚本 |
-
-改进版 OTA 下载器：`scripts/download_ota.py`，仅用 Python 标准库及用户现有 mit 米家缓存。会先查询所有配置接口，再分组件选择候选；当前实机版本须通过参数提供。用法见 [OTA 下载说明](docs/ota-download.md#改进版下载器)。原 `firmware/lx7_ota_mit.py` 保持原样。
 
 `FUN_地址` 是 Ghidra 自动命名；文中的功能说明是分析标签，不是恢复的厂商源码符号。证据保留的 C 输出含自动类型推断错误，应结合原始地址及调用指令复核。
 
@@ -39,4 +36,4 @@ bash scripts/run_ghidra.sh
 
 `work/extracted/lx7-analysis.elf` 是脚本合成的分析容器，不是厂商 ELF，也不可用于刷机。IROM 采用 flash 槽位 `0x1000` 的映射，依据见格式文档。
 
-原始固件只读，未运行固件或 `firmware/lx7_ota_mit.py`，未连接设备或米家云端；只读取了用户指定的公开 `pexcn/mit` 源码。未执行 MiIO 写入、刷机、滤芯复位、重启或冲洗。原始固件在初始仓库中已被跟踪；本次提交不新增或修改它，不改写既有 Git 历史。新提取的二进制、Ghidra 工程、临时日志均在忽略的 `work/`；不提交 Token 或账号凭据。
+原始固件只读，未运行固件或操作设备。新提取的二进制、Ghidra 工程和临时日志保存在忽略的 `work/`；不提交固件副本、Token 或账号凭据。

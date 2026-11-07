@@ -11,7 +11,7 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
-spec = importlib.util.spec_from_file_location('download_ota', Path(__file__).parents[1] / 'scripts/download_ota.py')
+spec = importlib.util.spec_from_file_location('download_ota', Path(__file__).parents[1] / 'firmware/download_ota.py')
 ota = importlib.util.module_from_spec(spec)
 sys.modules[spec.name] = ota
 spec.loader.exec_module(ota)

@@ -1,5 +1,6 @@
 /work/
-/firmware/
+/firmware/*
+!/firmware/download_ota.py
 __pycache__/
 *.pyc
 .env
