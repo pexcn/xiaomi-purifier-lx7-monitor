@@ -1,0 +1,14 @@
+{
+  "source": "User-provided miIO.info [] response in this conversation; not queried by the analyst",
+  "observation_date": "2026-11-07",
+  "provenance": "User-reported runtime observation; no independent packet capture",
+  "fields": {
+    "model": "yunmi.waterpuri.lx7",
+    "hw_ver": "esp8266",
+    "fw_ver": "2.1.3",
+    "mcu_fw_ver": "0012",
+    "wifi_fw_ver": "8903c22",
+    "miio_ver": "0.0.9"
+  },
+  "privacy": "Only model and version fields retained; no original response or credentials stored"
+}
