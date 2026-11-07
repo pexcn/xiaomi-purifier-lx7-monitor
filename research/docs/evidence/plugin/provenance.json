@@ -1,0 +1,607 @@
+{
+  "archive_name": "1023976.zip",
+  "archive_sha256": "2d639e9dc42b606c2e78c760f63c75ef2c0fb4092fdd130d080f22d8485033e3",
+  "model_metadata": {
+    "model_list": [
+      "yunmi.waterpuri.lx7"
+    ],
+    "version": 75
+  },
+  "project_metadata": {
+    "package_path": "com.viomi.miwaterpurifier",
+    "version": "1.0.62",
+    "sdk_api_level": 10062,
+    "bundle_type": "indexed-ram-bundle",
+    "platform": "android"
+  },
+  "bundle_sha256": "33a3e8ab29f824f904632444e2d96f8b7bf0f9b37dc5ecfcb3c24cc4561fd9cd",
+  "table_entries": 23339,
+  "populated_modules": 639,
+  "data_base": "0x2d964",
+  "selected_modules": [
+    {
+      "id": 10007,
+      "file": "10007.js",
+      "offset": "0xe709f",
+      "length": 15644,
+      "raw_sha256": "4bdaf6bce14dbebca36162507a34b949d5557f183442b88b4859f692bfd65728",
+      "dependencies": [
+        14308,
+        14305,
+        14380,
+        14320,
+        14323,
+        14371,
+        14377,
+        14386,
+        10297,
+        10033,
+        10010,
+        10025,
+        10028,
+        10061,
+        10918,
+        10064,
+        10124,
+        10133,
+        10136,
+        10340,
+        10349,
+        10355,
+        10376,
+        10379,
+        10382,
+        10385,
+        10424,
+        10430,
+        10436,
+        10439,
+        10451,
+        10481,
+        10490,
+        10493,
+        10496,
+        10499,
+        10505,
+        10016,
+        10019,
+        10013,
+        10142,
+        10508,
+        10353
+      ]
+    },
+    {
+      "id": 10016,
+      "file": "10016.js",
+      "offset": "0xed1f7",
+      "length": 220,
+      "raw_sha256": "6c257dfb6df2a04eaea04fb0f689c7fec349e1ff1f646f40b3bd81cfe074b7c7",
+      "dependencies": []
+    },
+    {
+      "id": 10043,
+      "file": "10043.js",
+      "offset": "0x1c9914",
+      "length": 8995,
+      "raw_sha256": "936986ff9ff7520ef0f165ee11e481c2aa4f02bcf9e51f8859c6c2a6d5cb84a7",
+      "dependencies": [
+        14305,
+        10033,
+        10022,
+        10016,
+        10019,
+        10074
+      ]
+    },
+    {
+      "id": 10136,
+      "file": "10136.js",
+      "offset": "0x1de787",
+      "length": 15583,
+      "raw_sha256": "6e65685ae0b31462d47b39ddd7bbcf90010e23bc45c971c7cc7f81f23b774ebe",
+      "dependencies": [
+        14308,
+        14305,
+        14344,
+        14320,
+        14323,
+        14371,
+        14377,
+        14374,
+        14386,
+        10297,
+        10033,
+        10139,
+        10247,
+        10253,
+        10295,
+        10298,
+        10316,
+        10259,
+        10037,
+        10013,
+        10019,
+        10016,
+        10331,
+        10334,
+        10142,
+        10337
+      ]
+    },
+    {
+      "id": 10139,
+      "file": "10139.js",
+      "offset": "0x1e2466",
+      "length": 5212,
+      "raw_sha256": "4811ac9f5fad744cc1a906817de8930167e700153223c508a79cdeaf5d31e104",
+      "dependencies": [
+        14308,
+        14305,
+        14320,
+        14323,
+        14371,
+        14377,
+        14386,
+        10297,
+        10033,
+        10142,
+        10244
+      ]
+    },
+    {
+      "id": 10142,
+      "file": "10142.js",
+      "offset": "0x1e38c2",
+      "length": 8483,
+      "raw_sha256": "6b6c6c31a7816aa66645c090bd4488e439d5acbbb3aa44e53687851291ae5fe9",
+      "dependencies": [
+        14344,
+        10031,
+        10019,
+        10145,
+        10202,
+        10205,
+        10208,
+        10211,
+        10214,
+        10217,
+        10220,
+        10223,
+        10226,
+        10229,
+        10232,
+        10235,
+        10238,
+        10241
+      ]
+    },
+    {
+      "id": 10145,
+      "file": "10145.js",
+      "offset": "0x1e59e5",
+      "length": 24443,
+      "raw_sha256": "85f8675070b8ad6e921df03e2a97a91649fe371374d124d00d75476e54102e41",
+      "dependencies": [
+        10148,
+        10151,
+        10154,
+        10157,
+        10160,
+        10163,
+        10166,
+        10169,
+        10172,
+        10175,
+        10178,
+        10181,
+        10184,
+        10187,
+        10190,
+        10193,
+        10196,
+        10199
+      ]
+    },
+    {
+      "id": 10259,
+      "file": "10259.js",
+      "offset": "0x1fd8a4",
+      "length": 2472,
+      "raw_sha256": "7ad4eddd141cfaad498f16debbfe1fbbcb860b1356172bcd27b64a146555c3b4",
+      "dependencies": [
+        14305,
+        14344,
+        10262,
+        10265,
+        10268,
+        10271,
+        10274,
+        10277,
+        10280,
+        10283,
+        10286,
+        10289,
+        10292,
+        10019
+      ]
+    },
+    {
+      "id": 10286,
+      "file": "10286.js",
+      "offset": "0x1fe958",
+      "length": 533,
+      "raw_sha256": "953427f30e3feb213da0a21e1e2df2d2a56ae9d584420c3bb466fefe0cda6551",
+      "dependencies": [
+        10031
+      ]
+    },
+    {
+      "id": 10298,
+      "file": "10298.js",
+      "offset": "0x202092",
+      "length": 10481,
+      "raw_sha256": "8211dd6d0fce93bf5d5233c019e66d7697bb0f4e87493784379361ce6cc6b649",
+      "dependencies": [
+        14308,
+        14305,
+        14320,
+        14323,
+        14371,
+        14377,
+        14386,
+        10297,
+        10033,
+        10259,
+        10142,
+        10013,
+        10301,
+        10304,
+        10307,
+        10310,
+        10313
+      ]
+    },
+    {
+      "id": 10316,
+      "file": "10316.js",
+      "offset": "0x2052d4",
+      "length": 14265,
+      "raw_sha256": "50ffb3b4eeb2baa454e7449268f7a97fff5f0b8083a6a00f0073f0fc76e78b78",
+      "dependencies": [
+        14308,
+        14305,
+        14320,
+        14323,
+        14371,
+        14377,
+        14386,
+        10297,
+        10033,
+        10319,
+        10025,
+        10142,
+        10019,
+        10322,
+        10328
+      ]
+    },
+    {
+      "id": 10319,
+      "file": "10319.js",
+      "offset": "0x208a8d",
+      "length": 17883,
+      "raw_sha256": "13e00c7c5d313a59f0b80ab60d4eeda13e6af4f740c352a09f3945e26f7457ec",
+      "dependencies": [
+        14308,
+        14305,
+        14320,
+        14323,
+        14371,
+        14377,
+        14386,
+        10297,
+        10033,
+        10019,
+        10322,
+        10142,
+        10325
+      ]
+    },
+    {
+      "id": 10334,
+      "file": "10334.js",
+      "offset": "0x211378",
+      "length": 8798,
+      "raw_sha256": "c25463bbedc1911690bfab4794737a911a504847f7cb17f3035541fcef828959",
+      "dependencies": [
+        10019,
+        10142
+      ]
+    },
+    {
+      "id": 10385,
+      "file": "10385.js",
+      "offset": "0x22908c",
+      "length": 723,
+      "raw_sha256": "025f1e8e11e1d24559fbea3c11be79b3f7e211cad8238d710bea64bcf1cbc218",
+      "dependencies": [
+        14305,
+        10388,
+        10391
+      ]
+    },
+    {
+      "id": 10391,
+      "file": "10391.js",
+      "offset": "0x229b48",
+      "length": 8693,
+      "raw_sha256": "5228002385749da60450bdd4641583f875d3035ffbfa6434b2fed0c71df99f0c",
+      "dependencies": [
+        14305,
+        14320,
+        14323,
+        14371,
+        14377,
+        14386,
+        10019,
+        10016,
+        10297,
+        10033,
+        10394,
+        10064,
+        10343,
+        10259,
+        10142,
+        10353
+      ]
+    },
+    {
+      "id": 10436,
+      "file": "10436.js",
+      "offset": "0x2377d5",
+      "length": 15889,
+      "raw_sha256": "84878f00ee7b78c12e3a4e206255a3b26bd640c38c0907c6591b1b7c548eaed2",
+      "dependencies": [
+        14308,
+        14305,
+        14320,
+        14323,
+        14371,
+        14377,
+        14374,
+        14386,
+        11485,
+        10297,
+        10033,
+        10247,
+        10259,
+        10013,
+        10019,
+        10016,
+        10142
+      ]
+    }
+  ],
+  "excerpts": [
+    {
+      "key": "model-flags",
+      "module": 10142,
+      "symbol": "Base.model",
+      "offset": "0x1e4d41",
+      "length": 503,
+      "sha256": "32bd8ee9d3a94bcfa07ea97646a5c6ae95b611c3b1330c6d6e24fa0561c01528"
+    },
+    {
+      "key": "model-config-dispatch",
+      "module": 10259,
+      "symbol": "Config switch",
+      "offset": "0x1fe0ed",
+      "length": 98,
+      "sha256": "7ec67fbdb84243db4d4d00892271adb4fe1da07957d902bfe7f41c8524eaa204"
+    },
+    {
+      "key": "lx7-config",
+      "module": 10286,
+      "symbol": "default config",
+      "offset": "0x1fea57",
+      "length": 230,
+      "sha256": "93f243a54fb23e5df4be05b41a7550034147d19c3c3170323c6770cc24fd207e"
+    },
+    {
+      "key": "get-prop-fields",
+      "module": 10136,
+      "symbol": "MainPage.readState",
+      "offset": "0x1dfe2b",
+      "length": 284,
+      "sha256": "2f124860b12280a57f36c2d3276a7f5c8f2e44214de832ea8720485a173f1572"
+    },
+    {
+      "key": "time-days",
+      "module": 10334,
+      "symbol": "getDays",
+      "offset": "0x211798",
+      "length": 185,
+      "sha256": "bc2677e3fa651b7007974430d37f39192a400292e07b48a633817bcda93a98a1"
+    },
+    {
+      "key": "filter-lifetime",
+      "module": 10334,
+      "symbol": "DealProp.excute isMi2 branch",
+      "offset": "0x211e09",
+      "length": 512,
+      "sha256": "419888f8e18e29fbbab04418b7fe916a61b0a8b4242db7c095340cfb3eaa95bc"
+    },
+    {
+      "key": "light-warning",
+      "module": 10334,
+      "symbol": "DealProp.excute lightMode branch",
+      "offset": "0x212100",
+      "length": 558,
+      "sha256": "31b81bfb3c299fe6b6b6fc26db9d9a5d18944eeeb0e2119e817be55ef04688c6"
+    },
+    {
+      "key": "filter-binding",
+      "module": 10142,
+      "symbol": "Base.getFilterData isMi2 branch",
+      "offset": "0x1e4487",
+      "length": 471,
+      "sha256": "9ceee0e86fca4b8f6346a0b25e49cf5fb54af95ac4df9d9b31bae123b5b1ace5"
+    },
+    {
+      "key": "details-navigation",
+      "module": 10298,
+      "symbol": "MainPageFilter.toFilterState",
+      "offset": "0x203203",
+      "length": 197,
+      "sha256": "2cd649c735026d48c3c94509941c4673f93d5fc6603ab3d8959dd505acb342b3"
+    },
+    {
+      "key": "percent-render",
+      "module": 10298,
+      "symbol": "MainPageFilter.render",
+      "offset": "0x204061",
+      "length": 182,
+      "sha256": "26c918c738b6cc15419a131ea529ad5b2ba0ce3123f48e06fa729da242418c62"
+    },
+    {
+      "key": "tds-options",
+      "module": 10139,
+      "symbol": "FeatureView constructor",
+      "offset": "0x1e2986",
+      "length": 155,
+      "sha256": "968d750f06f02d55859bbe9fb348594678cd56cd78f63dcfce897878221a2b0e"
+    },
+    {
+      "key": "tds-read-write",
+      "module": 10139,
+      "symbol": "FeatureView.componentDidMount/showTdsList",
+      "offset": "0x1e2a8a",
+      "length": 1179,
+      "sha256": "aa73f45ee0c62c38770b8fd2660bc07979e3c44687bdbf5d9e475562ec912612"
+    },
+    {
+      "key": "hidden-light-entry",
+      "module": 10391,
+      "symbol": "MiSettingPage.consecutivePress",
+      "offset": "0x22a2c8",
+      "length": 1094,
+      "sha256": "e52cb7276e7763311e2ab06ac5418c2ae94a3b60636f59445fbc835d5181416a"
+    },
+    {
+      "key": "light-write",
+      "module": 10391,
+      "symbol": "MiSettingPage.setMode",
+      "offset": "0x22aa39",
+      "length": 469,
+      "sha256": "5e3f5f004bdd6946fb3dcc1620a93cdb75fc0145a13336045d49f3cb3150d6f4"
+    },
+    {
+      "key": "light-switch-values",
+      "module": 10391,
+      "symbol": "MiSettingPage.render",
+      "offset": "0x22b4fc",
+      "length": 660,
+      "sha256": "a1d73def8b47d0eb9ec7671292ac2c39b8ef5ca212f99a0e1fd599f4bd31fa3a"
+    },
+    {
+      "key": "filter-reset-name",
+      "module": 10436,
+      "symbol": "FilterState.resetTwice",
+      "offset": "0x239ed0",
+      "length": 56,
+      "sha256": "301f9275480877bf70a1e706cc9ab86871634c77ee9277da67d5a1f5d49cb37f"
+    },
+    {
+      "key": "filter-reset-params",
+      "module": 10436,
+      "symbol": "FilterState.setResetMode",
+      "offset": "0x23a0b0",
+      "length": 444,
+      "sha256": "bc52ea8b6f3a182c5e587515bf5c9c174646e2dd0ea0f96f706c4460c7be0041"
+    },
+    {
+      "key": "water-display-unit",
+      "module": 10142,
+      "symbol": "Base.formatWater",
+      "offset": "0x1e4a08",
+      "length": 236,
+      "sha256": "a070e8b650425aaef4e35fb80cb3e79d26a91be250fb5d30dcdf2142ed06473a"
+    },
+    {
+      "key": "history-water-shape",
+      "module": 10319,
+      "symbol": "getPureWaste",
+      "offset": "0x208fd5",
+      "length": 629,
+      "sha256": "b860e377cd71f8f3600d1ec93994c2d0c74a2fb8df6bb985d88d08505f2fcf77"
+    },
+    {
+      "key": "history-event-fields",
+      "module": 10316,
+      "symbol": "MainPageUseWater.getItem",
+      "offset": "0x206bd8",
+      "length": 890,
+      "sha256": "5aea57703b57e61789fdd34830abf8e100c3f54e07316a7f0fdb590fb2e6712a"
+    },
+    {
+      "key": "cloud-history-keys",
+      "module": 10319,
+      "symbol": "MainPageUseWaterAnalyse.dealData",
+      "offset": "0x20ab36",
+      "length": 725,
+      "sha256": "c91b1400081f3753205bf87f16b1ff6484df0e31e6fd7ff414d0224832fdda3c"
+    },
+    {
+      "key": "tds-render-entry",
+      "module": 10139,
+      "symbol": "FeatureView.render",
+      "offset": "0x1e2f25",
+      "length": 1551,
+      "sha256": "4d8764414aed2ffdc9f1b2aa8963f95cfc23143b0963c908a85fa5e6d9120ab9"
+    },
+    {
+      "key": "sdk-history-api",
+      "module": 10043,
+      "symbol": "dataManager.callSmartHomeAPI (Mijia)",
+      "offset": "0x1caf96",
+      "length": 266,
+      "sha256": "0f636ebbab929d4029b295ba5450bfed9e230ed401f37ad0af7b2e85814148b9"
+    }
+  ],
+  "rea": {
+    "operation": "analyze_javascript_application",
+    "source_selection": {
+      "requested_paths": [
+        "10142.js",
+        "10334.js",
+        "10136.js",
+        "10139.js",
+        "10391.js",
+        "10436.js",
+        "10286.js",
+        "10319.js",
+        "10316.js"
+      ],
+      "unselected_files": 632
+    },
+    "statistics": {
+      "relevant_files": 641,
+      "nested_asar_containers": 0,
+      "text_bytes_read": 95330,
+      "invalid_utf8_files": 0,
+      "parsed_javascript_files": 9,
+      "skipped_javascript_files": 0,
+      "visited_ast_nodes": 14092,
+      "findings": 2,
+      "modules": 0,
+      "parse_failures": 0
+    },
+    "scope": "Nine selected module files; application/semantic coverage partial, not all 639 modules analyzed by REA"
+  },
+  "limitations": [
+    "No plugin code executed; no device/cloud requests sent.",
+    "Package metadata and static client behavior do not prove MCU implementation or active plugin version.",
+    "Bundle certificate/signature was not cryptographically verified."
+  ]
+}

@@ -92,6 +92,8 @@ IROM 地址采用 `0x40200000 + 0x1000 + 文件偏移`。这是装载槽位假�
 
 ## 证据使用
 
+客户端的独立证据见 [plugin.md](plugin.md)：它能解释小时单位、寿命显示和请求格式，不能代替 MCU 的计数实现，也不与固件版本混同。
+
 [interfaces.json](evidence/interfaces.json) 来自对原文件函数表的直接解析，包含每项表偏移、字符串偏移、函数 VA 和文件偏移。`scripts/inventory.py` 先校验固定 SHA-256，避免将旧偏移套到别的版本。
 
 [decompiled/](evidence/decompiled/) 是 Ghidra 的真实输出，仅去除行末空格和尾部空行，保留语句、签名及 `FUN_`/`DAT_` 自动名称。Xtensa 返回值和 varargs 部分被推断为 `void` 或缺少参数；不可将其当成可编译源码。关键分发/串口指令摘录在 [bridge-calls.txt](evidence/bridge-calls.txt)，对照实际 `call0`、`callx0`、`l32r` 使用。未执行固件代码。

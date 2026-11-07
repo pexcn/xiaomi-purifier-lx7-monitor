@@ -22,7 +22,7 @@
   },
   "status": {
     "reported_values": "User observation",
-    "time_quantum_24_hours": "Hypothesis; units and successive transitions unverified",
+    "time_quantum_24_hours": "Hypothesis; successive transitions and calendar/elapsed-time rule unverified",
     "flow_quantum_10_liters": "Hypothesis; units and successive transitions unverified",
     "rounding_rule": "Unverified",
     "raw_or_purified_water": "Unresolved"
