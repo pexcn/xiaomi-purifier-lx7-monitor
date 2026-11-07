@@ -1,0 +1,8 @@
+/work/
+/firmware/
+__pycache__/
+*.pyc
+.env
+.env.*
+*.token
+auth.json

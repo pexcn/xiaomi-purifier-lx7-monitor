@@ -1,0 +1,215 @@
+[
+  {
+    "evidence_id": "ev_8e37fb788e5cc9aadcb2576194d95221025a7db4b19d59a031d0b8055f804ccc",
+    "subject": {
+      "name": "yunmi.waterpuri.lx7-1.3.9.bin",
+      "digest": {
+        "sha256": "f20d634664918a9e5ab483774c1fd3b80afae2bfd6a5416619a56aaa1093a1c5"
+      },
+      "local_path": "/workspace/xiaomi-waterpurifier-lx7-re/firmware/yunmi.waterpuri.lx7-1.3.9.bin",
+      "format": "file",
+      "architecture": null
+    },
+    "provider": {
+      "id": "binwalk",
+      "name": "Binwalk",
+      "version": "3.1.0"
+    },
+    "operation": "inspect_firmware_regions",
+    "parameters": {
+      "path": "/workspace/xiaomi-waterpurifier-lx7-re/firmware/yunmi.waterpuri.lx7-1.3.9.bin"
+    },
+    "normalized_result": {
+      "analysis_timeout_ms": 120000,
+      "engine": {
+        "name": "binwalk",
+        "version": "3.1.0",
+        "executable_path": "/workspace/tools/firmware-bin/binwalk",
+        "executable_sha256": "768789c8848b9f9436533479b5f5e548809d45a261ac65791e57ec300495b6d8",
+        "source_revision": null,
+        "worker_count": 1
+      },
+      "input_size": 456872,
+      "regions": [
+        {
+          "provider_id": "19e1149e-d87c-449f-9aa4-ee406f48b985",
+          "offset": 125217,
+          "reported_size": 6,
+          "signature": "gpg_signed",
+          "description": "GPG signed file, total size: 6 bytes",
+          "reported_confidence": 250,
+          "size_basis": "provider_reported_validation_unknown"
+        },
+        {
+          "provider_id": "e4d104f7-08d8-4123-a160-b09f7e8cf548",
+          "offset": 194368,
+          "reported_size": 258272,
+          "signature": "aes_sbox",
+          "description": "AES S-Box",
+          "reported_confidence": 0,
+          "size_basis": "provider_reported_validation_unknown"
+        },
+        {
+          "provider_id": "fe588329-bff6-4cb9-b252-589d7ea4156a",
+          "offset": 194656,
+          "reported_size": 257984,
+          "signature": "aes_sbox",
+          "description": "AES S-Box",
+          "reported_confidence": 0,
+          "size_basis": "provider_reported_validation_unknown"
+        },
+        {
+          "provider_id": "12cea622-df8d-4ca1-9d7e-b5ecc860d2d9",
+          "offset": 194912,
+          "reported_size": 257728,
+          "signature": "aes_sbox",
+          "description": "AES S-Box",
+          "reported_confidence": 0,
+          "size_basis": "provider_reported_validation_unknown"
+        },
+        {
+          "provider_id": "9a9469bb-484c-49d6-b1d8-0c0a6ff9372e",
+          "offset": 195812,
+          "reported_size": 16,
+          "signature": "sha256",
+          "description": "SHA256 hash constants, little endian",
+          "reported_confidence": 0,
+          "size_basis": "provider_reported_validation_unknown"
+        },
+        {
+          "provider_id": "d946bba3-b923-415a-9795-4efee2bf20b6",
+          "offset": 202852,
+          "reported_size": 249788,
+          "signature": "aes_sbox",
+          "description": "AES S-Box",
+          "reported_confidence": 0,
+          "size_basis": "provider_reported_validation_unknown"
+        },
+        {
+          "provider_id": "bf4c03af-4f0d-4109-a19b-8c49cd675f38",
+          "offset": 207204,
+          "reported_size": 245436,
+          "signature": "aes_sbox",
+          "description": "AES S-Box",
+          "reported_confidence": 0,
+          "size_basis": "provider_reported_validation_unknown"
+        },
+        {
+          "provider_id": "c3dda6a5-e7dc-49e5-8341-3e5e8d4ab664",
+          "offset": 450064,
+          "reported_size": 16,
+          "signature": "crc32",
+          "description": "CRC32 polynomial table, little endian",
+          "reported_confidence": 0,
+          "size_basis": "provider_reported_validation_unknown"
+        },
+        {
+          "provider_id": "7bffc1fc-4e39-4462-80ce-7a8dd2cc6c61",
+          "offset": 452640,
+          "reported_size": 554,
+          "signature": "pem_certificate",
+          "description": "PEM certificate",
+          "reported_confidence": 250,
+          "size_basis": "provider_reported_validation_unknown"
+        }
+      ],
+      "coverage": "signature_scan"
+    },
+    "confidence": "observed",
+    "limitations": [
+      "Signature matches and reported sizes do not establish partition validity, encryption or runtime mappings. Binwalk may infer unknown lengths before emitting its report.",
+      "Only Linux is supported by this integration. One worker, inherited per-process address-space/file-size/CPU limits and a deadline constrain execution; staging byte and entry budgets are polled and may transiently overshoot. Limits are not aggregate process-memory or filesystem quotas.",
+      "Unblob's default sandbox and skip rules remain enabled. Missing external extractors, unknown chunks, encrypted chunks and depth limits yield partial coverage. Extracted code is never executed; only regular files are published, without executable permission bits.",
+      "extraction_gaps lists regions that were carved or left unextracted and names extractor dependencies the producer reported as missing. A listed gap does not mean the target is corrupt or that a retained region is empty.",
+      "The actual launcher executable is hashed. Interpreter, shared libraries and installed Python package dependencies are not independently attested; source revision remains unknown for caller-supplied builds."
+    ]
+  },
+  {
+    "evidence_id": "ev_b6a063264e870277f8f0cc2bac17aa1a809ca81fcd62376e3e6e6b4f904615e9",
+    "subject": {
+      "name": "yunmi.waterpuri.lx7-1.3.9.bin",
+      "digest": {
+        "sha256": "f20d634664918a9e5ab483774c1fd3b80afae2bfd6a5416619a56aaa1093a1c5"
+      },
+      "local_path": "/workspace/xiaomi-waterpurifier-lx7-re/firmware/yunmi.waterpuri.lx7-1.3.9.bin",
+      "format": "file",
+      "architecture": null
+    },
+    "provider": {
+      "id": "unblob",
+      "name": "Unblob",
+      "version": "26.6.4"
+    },
+    "operation": "extract_firmware",
+    "parameters": {
+      "path": "/workspace/xiaomi-waterpurifier-lx7-re/firmware/yunmi.waterpuri.lx7-1.3.9.bin",
+      "output_directory": "/workspace/xiaomi-waterpurifier-lx7-re/work/rea-irom",
+      "range": {
+        "offset": 16,
+        "length": 414304
+      },
+      "max_depth": 1,
+      "max_output_bytes": 268435456,
+      "max_output_files": 10000,
+      "publication_timeout_ms": 120000
+    },
+    "normalized_result": {
+      "analysis_timeout_ms": 120000,
+      "engine": {
+        "name": "unblob",
+        "version": "26.6.4",
+        "executable_path": "/workspace/tools/firmware-bin/unblob",
+        "executable_sha256": "8ff2a4139d4bd7d611a800964c3a4722fc6595ab10b96728680282df2f56da45",
+        "source_revision": null,
+        "worker_count": 1
+      },
+      "selection": {
+        "offset": 16,
+        "length": 414304,
+        "sha256": "9f991402a2a6257ce0ad002bf08497a93385ec07699b5b61a0e4924bfee43d86"
+      },
+      "output_directory": "/workspace/xiaomi-waterpurifier-lx7-re/work/rea-irom",
+      "coverage": "partial",
+      "files": [],
+      "unpublished_entries": [],
+      "chunks": [],
+      "derivations": [],
+      "depth_limited_paths": [],
+      "diagnostics": [],
+      "extraction_gaps": [
+        {
+          "kind": "unclassified-range",
+          "input_path": "$input",
+          "relative_path": null,
+          "handler": null,
+          "provider_id": null,
+          "range": {
+            "offset": 0,
+            "length": 414304
+          },
+          "root_file_range": {
+            "offset": 16,
+            "length": 414304
+          },
+          "dependencies": [],
+          "continuation_id": "8209c510e1daedde97ca89ec0a124b4bc4c52aba22933825bc7547dd0ebbfcc0"
+        }
+      ],
+      "extraction_continuations": [
+        {
+          "id": "8209c510e1daedde97ca89ec0a124b4bc4c52aba22933825bc7547dd0ebbfcc0",
+          "instruction": "The producer reported no chunk covering these bytes. Their format and extraction status remain unknown. If Binwalk is configured, inspect_firmware_regions can supply signature hypotheses; otherwise retain this range as unexamined."
+        }
+      ],
+      "published_bytes": 0
+    },
+    "confidence": "observed",
+    "limitations": [
+      "Signature matches and reported sizes do not establish partition validity, encryption or runtime mappings. Binwalk may infer unknown lengths before emitting its report.",
+      "Only Linux is supported by this integration. One worker, inherited per-process address-space/file-size/CPU limits and a deadline constrain execution; staging byte and entry budgets are polled and may transiently overshoot. Limits are not aggregate process-memory or filesystem quotas.",
+      "Unblob's default sandbox and skip rules remain enabled. Missing external extractors, unknown chunks, encrypted chunks and depth limits yield partial coverage. Extracted code is never executed; only regular files are published, without executable permission bits.",
+      "extraction_gaps lists regions that were carved or left unextracted and names extractor dependencies the producer reported as missing. A listed gap does not mean the target is corrupt or that a retained region is empty.",
+      "The actual launcher executable is hashed. Interpreter, shared libraries and installed Python package dependencies are not independently attested; source revision remains unknown for caller-supplied builds."
+    ]
+  }
+]

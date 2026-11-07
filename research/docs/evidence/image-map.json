@@ -1,0 +1,44 @@
+{
+  "source": "firmware/yunmi.waterpuri.lx7-1.3.9.bin",
+  "sha256": "f20d634664918a9e5ab483774c1fd3b80afae2bfd6a5416619a56aaa1093a1c5",
+  "size": 456872,
+  "format": "ESP8266 v2 OTA",
+  "entry": 1074790404,
+  "spi_mode": 0,
+  "size_frequency": 80,
+  "segments": [
+    {
+      "name": ".irom0.text",
+      "file_offset": 16,
+      "address": 1075843088,
+      "length": 414304,
+      "flags": 5
+    },
+    {
+      "name": ".iram0.text",
+      "file_offset": 414336,
+      "address": 1074790400,
+      "length": 31480,
+      "flags": 5
+    },
+    {
+      "name": ".dram1",
+      "file_offset": 445824,
+      "address": 1073643520,
+      "length": 3200,
+      "flags": 6
+    },
+    {
+      "name": ".dram2",
+      "file_offset": 449032,
+      "address": 1073646720,
+      "length": 7820,
+      "flags": 6
+    }
+  ],
+  "checksum_offset": 456863,
+  "checksum_computed": 199,
+  "checksum_stored": 199,
+  "trailing_bytes": 8,
+  "caveat": "Synthetic ELF; IROM flash slot assumption 0x1000"
+}
