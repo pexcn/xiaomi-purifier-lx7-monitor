@@ -36,7 +36,7 @@ public class ExportFunctions extends GhidraScript {
                 while (incoming.hasNext()) {
                     Reference ref = incoming.next();
                     Function caller = getFunctionContaining(ref.getFromAddress());
-                    refs.println(entry + "\t" + ref.getFromAddress() + "\t" + ref.getReferenceType() + "\t" + (caller == null ? "" : caller.getEntryPoint()));
+                    refs.println(entry + "\t" + ref.getFromAddress() + "\t" + ref.getReferenceType() + "\t" + (caller == null ? "-" : caller.getEntryPoint()));
                 }
                 listing.println("FUNCTION " + entry);
                 InstructionIterator instructions = currentProgram.getListing().getInstructions(function.getBody(), true);
