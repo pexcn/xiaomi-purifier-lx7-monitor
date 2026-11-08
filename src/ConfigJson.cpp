@@ -72,7 +72,7 @@ bool parseConfig(JsonVariantConst doc, Config& out, const char*& error) {
     }
   }
   if (!doc["activity_source"].isNull() && !doc["activity_source"].is<const char*>()) return false;
-  const char* source = doc["activity_source"] | "unverified";
+  const char* source = doc["activity_source"] | "tds_change";
   if (!strcmp(source, "run_status")) {
     s.activitySource = ActivitySource::RunStatus;
     if (!doc["making_mask"].is<uint32_t>() || !doc["making_value"].is<uint32_t>()) return false;
@@ -80,7 +80,9 @@ bool parseConfig(JsonVariantConst doc, Config& out, const char*& error) {
     s.makingValue = doc["making_value"].as<uint32_t>();
     if (!s.makingMask || (s.makingValue & ~s.makingMask)) return false;
   } else if (!strcmp(source, "flow_change")) s.activitySource = ActivitySource::FlowChange;
-  else if (strcmp(source, "unverified")) return false;
+  else if (!strcmp(source, "tds_change")) s.activitySource = ActivitySource::TdsChange;
+  else if (!strcmp(source, "unverified")) s.activitySource = ActivitySource::Unverified;
+  else return false;
   if (!doc["diagnostics"].isNull() && !doc["diagnostics"].is<bool>()) return false;
   c.diagnostics = doc["diagnostics"] | false;
   for (const char* key : {"oled_address", "oled_sda", "oled_scl"}) {
@@ -118,7 +120,8 @@ void configToJson(JsonDocument& doc, const Config& c, bool secrets) {
   litres.add(s.litresPerFlowUnit[0]);
   litres.add(s.litresPerFlowUnit[1]);
   doc["activity_source"] = s.activitySource == ActivitySource::RunStatus ? "run_status" :
-      s.activitySource == ActivitySource::FlowChange ? "flow_change" : "unverified";
+      s.activitySource == ActivitySource::FlowChange ? "flow_change" :
+      s.activitySource == ActivitySource::TdsChange ? "tds_change" : "unverified";
   doc["making_mask"] = s.makingMask;
   doc["making_value"] = s.makingValue;
   doc["diagnostics"] = c.diagnostics;

@@ -2,9 +2,9 @@
 #include <cstddef>
 #include <cstdint>
 
-enum class ActivitySource { Unverified, RunStatus, FlowChange };
+enum class ActivitySource { Unverified, RunStatus, FlowChange, TdsChange };
 enum class FilterDisplay { Percent, Litres };
-enum class Activity { Unknown, Idle, Making, FlowObserved };
+enum class Activity { Unknown, Idle, Making, FlowObserved, TdsObserved };
 enum class LinkStatus { Connecting, Ok, WifiDown, Timeout, InvalidPacket, RpcError, BadData };
 
 struct FilterFlow {
@@ -22,13 +22,13 @@ struct PurifierData {
 };
 
 struct Settings {
-  uint32_t pollIntervalMs = 2000;
+  uint32_t pollIntervalMs = 2500;
   uint32_t screenOffDelayMs = 30000;
   uint32_t responseTimeoutMs = 1500;
   uint32_t staleAfterMs = 10000;
   FilterDisplay filterDisplay = FilterDisplay::Percent;
   float litresPerFlowUnit[2] = {0, 0}; // 0 means conversion has not been verified.
-  ActivitySource activitySource = ActivitySource::Unverified;
+  ActivitySource activitySource = ActivitySource::TdsChange;
   uint32_t makingMask = 0, makingValue = 0;
 };
 

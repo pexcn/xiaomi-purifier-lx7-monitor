@@ -20,6 +20,12 @@ void Controller::accept(const PurifierData& data, uint32_t now) {
     }
     if (increased) wakeAt_ = now;
     activity_ = Activity::FlowObserved; // Approximate activity, never labelled Making.
+  } else if (settings_.activitySource == ActivitySource::TdsChange) {
+    // Compare consecutive valid, fresh samples only. Either direction (including
+    // to/from zero) is an update, not proof that the purifier is currently making water.
+    if (wasFresh && data.tdsOutValid && data_.tdsOutValid && data.tdsOut != data_.tdsOut)
+      wakeAt_ = now;
+    activity_ = Activity::TdsObserved;
   } else {
     activity_ = Activity::Unknown;
   }

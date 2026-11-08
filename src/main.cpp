@@ -88,7 +88,9 @@ void loop() {
         report(LinkStatus::Ok);
         if (config.diagnostics) {
           const auto& d = purifier.data();
-          logEvent_P(LogLevel::Info, PSTR("run_status=%s%lu rinse=%s%lu f1=%s%lu/%lu f2=%s%lu/%lu"),
+          logEvent_P(LogLevel::Info, PSTR("tds_in=%s%lu tds_out=%s%lu run_status=%s%lu rinse=%s%lu f1=%s%lu/%lu f2=%s%lu/%lu"),
+              d.tdsInValid ? "" : "invalid:", static_cast<unsigned long>(d.tdsIn),
+              d.tdsOutValid ? "" : "invalid:", static_cast<unsigned long>(d.tdsOut),
               d.runStatusValid ? "" : "invalid:",
               static_cast<unsigned long>(d.runStatus), d.rinseValid ? "" : "invalid:",
               static_cast<unsigned long>(d.rinse), d.filters[0].valid ? "" : "invalid:",

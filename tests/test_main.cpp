@@ -80,6 +80,8 @@ void configTests() {
   Config c;
   const char* error;
   assert(parseConfig(doc.as<JsonVariantConst>(), c, error));
+  assert(c.settings.pollIntervalMs == 2500 && c.settings.screenOffDelayMs == 30000);
+  assert(c.settings.activitySource == ActivitySource::TdsChange);
   assert(!c.adminPassword[0]); // Existing configs remain readable for physical-access migration.
   strcpy(c.adminPassword, "test-admin-password");
   c.settings.filterDisplay = FilterDisplay::Litres;
@@ -90,6 +92,22 @@ void configTests() {
   assert(!strcmp(roundTrip.password, c.password) && !strcmp(roundTrip.token, c.token));
   assert(!strcmp(roundTrip.adminPassword, c.adminPassword));
   assert(roundTrip.settings.filterDisplay == FilterDisplay::Litres && roundTrip.settings.litresPerFlowUnit[0] == 1);
+  assert(doc["activity_source"] == "tds_change");
+  const char* sources[] = {"tds_change", "unverified", "flow_change", "run_status"};
+  const ActivitySource expected[] = {ActivitySource::TdsChange, ActivitySource::Unverified,
+      ActivitySource::FlowChange, ActivitySource::RunStatus};
+  for (size_t i = 0; i < 4; ++i) {
+    doc["activity_source"] = sources[i];
+    doc["making_mask"] = 4; // Synthetic rule, not an lx7 protocol claim.
+    doc["making_value"] = 4;
+    doc["poll_interval_ms"] = 2000; // Existing explicit settings survive OTA/loading.
+    assert(parseConfig(doc.as<JsonVariantConst>(), roundTrip, error));
+    assert(roundTrip.settings.activitySource == expected[i] && roundTrip.settings.pollIntervalMs == 2000);
+    configToJson(doc, roundTrip, true);
+    assert(doc["activity_source"] == sources[i]);
+  }
+  doc["activity_source"] = "not-a-source";
+  assert(!parseConfig(doc.as<JsonVariantConst>(), roundTrip, error));
   configToJson(doc, c, false);
   assert(doc["wifi_password"].isNull() && doc["token"].isNull() && doc["admin_password"].isNull());
 
@@ -128,6 +146,10 @@ void configTests() {
   update["settings"]["filter_display"] = true;
   assert(!mergeConfigUpdate(update.as<JsonVariantConst>(), c, roundTrip, error));
   update["settings"].remove("filter_display");
+  update["settings"]["activity_source"] = "tds_change";
+  update["settings"]["poll_interval_ms"] = 2500;
+  assert(mergeConfigUpdate(update.as<JsonVariantConst>(), c, roundTrip, error));
+  assert(roundTrip.settings.activitySource == ActivitySource::TdsChange && roundTrip.settings.pollIntervalMs == 2500);
   update["settings"]["activity_source"] = "run_status";
   update["settings"]["making_mask"] = 0;
   assert(!mergeConfigUpdate(update.as<JsonVariantConst>(), c, roundTrip, error));
@@ -283,6 +305,92 @@ void controllerTests() {
   assert(unknown.view(31000).awake && unknown.view(31000).activity == Activity::Unknown);
 }
 
+void tdsWakeTests() {
+  Settings s; // Exercise the new default, without a separate TDS poller.
+  Controller steady(s);
+  steady.begin(0);
+  PurifierData constant;
+  constant.tdsOutValid = true;
+  constant.tdsOut = 3;
+  for (uint32_t now = 0; now <= 32500; now += s.pollIntervalMs) {
+    steady.accept(constant, now);
+    assert(steady.view(now).fresh && steady.view(now).awake == (now < 30000));
+  }
+  constant.tdsOut = 4;
+  steady.accept(constant, 35000);
+  assert(steady.view(35000).awake); // Polling continues while the display is asleep.
+
+  s.staleAfterMs = 60000;
+  Controller c(s);
+  c.begin(0);
+  PurifierData d;
+  d.tdsOut = 5;
+  d.tdsOutValid = true;
+  c.accept(d, 100); // First sample establishes a baseline and startup display window.
+  assert(c.view(30099).awake);
+  c.accept(d, 30100);
+  assert(!c.view(30100).awake); // Repeated identical samples do not extend the window.
+  d.tdsIn = 200;
+  d.tdsInValid = true;
+  d.filters[0] = {20, 7200, true};
+  c.accept(d, 31000);
+  assert(!c.view(31000).awake); // Other fields do not trigger the TDS-out rule.
+  d.tdsOut = 0;
+  c.accept(d, 32000);
+  assert(c.view(32000).awake && c.view(32000).activity == Activity::TdsObserved);
+  c.accept(d, 60000);
+  assert(!c.view(62000).awake); // Zero is valid, and equality still times out.
+  d.tdsOut = 1;
+  c.accept(d, 63000);
+  assert(c.view(63000).awake); // Both decreases and increases wake the screen.
+  d.tdsOut = 2;
+  c.accept(d, 65000);
+  assert(c.view(94999).awake && !c.view(95000).awake); // Each change restarts 30 seconds.
+  d.tdsOutValid = false;
+  d.tdsOut = 999;
+  c.accept(d, 96000);
+  assert(!c.view(96000).awake); // Invalid values never wake or turn into zero readings.
+  d.tdsOutValid = true;
+  d.tdsOut = 900;
+  c.accept(d, 97000);
+  assert(!c.view(97000).awake); // A valid value after a missing field is a new baseline.
+  d.tdsOut = 901;
+  c.accept(d, 98000);
+  assert(c.view(98000).awake && !c.view(128000).awake);
+  c.setLink(LinkStatus::Timeout, 130000);
+  assert(!c.view(130000).fresh && c.view(130000).awake);
+  c.setLink(LinkStatus::RpcError, 131000);
+  assert(!c.view(160000).awake); // Repeated errors cannot keep the display awake.
+  d.tdsOut = 777;
+  c.accept(d, 161000);
+  assert(c.view(161000).fresh && c.view(161000).awake);
+  c.accept(d, 191000);
+  assert(!c.view(191000).awake); // Recovery gets one display window, not permanent wake.
+  d.tdsOut = 778;
+  c.accept(d, 192000);
+  assert(c.view(192000).awake);
+  d.tdsOut = 779;
+  c.accept(d, 252001); // A stale gap starts a new baseline and recovery display window.
+  assert(c.view(252001).awake && !c.view(282001).awake);
+
+  Controller wrap(s);
+  const uint32_t start = UINT32_MAX - 1000;
+  wrap.begin(start);
+  wrap.accept(d, start);
+  assert(!wrap.view(start + 30000).awake);
+  ++d.tdsOut;
+  wrap.accept(d, start + 31000);
+  assert(wrap.view(start + 60999).awake && !wrap.view(start + 61000).awake);
+
+  s.screenOffDelayMs = 5000;
+  Controller shorter(s);
+  shorter.begin(0);
+  shorter.accept(d, 0);
+  ++d.tdsOut;
+  shorter.accept(d, 1000);
+  assert(shorter.view(5999).awake && !shorter.view(6000).awake);
+}
+
 void codecTests() {
   const char* tokenHex = "00112233445566778899aabbccddeeff";
   uint8_t token[16];
@@ -373,15 +481,15 @@ void transportTests() {
   FakeUdp::inject(packet, n);
   assert(client.tick(30) == Event::Sample && client.data().tdsOut == 5);
   assert(FakeUdp::outgoing.size() == 2); // Receiving must not send empty packets.
-  assert(client.tick(1999) == Event::None && FakeUdp::outgoing.size() == 2);
-  client.tick(2000);
+  assert(client.tick(2499) == Event::None && FakeUdp::outgoing.size() == 2);
+  client.tick(2500);
   assert(FakeUdp::outgoing.size() == 3);
-  assert(client.tick(3500) == Event::Error && client.error() == LinkStatus::Timeout);
-  client.tick(4000);
+  assert(client.tick(4000) == Event::Error && client.error() == LinkStatus::Timeout);
+  client.tick(5000);
   assert(FakeUdp::outgoing.back().bytes.size() == 32); // Re-handshake after a timeout.
   FakeUdp::inject(packet, sizeof(packet)); // Oversize input must not overflow the packet buffer.
-  assert(client.tick(4100) == Event::None);
-  assert(client.tick(5500) == Event::Error && client.error() == LinkStatus::InvalidPacket);
+  assert(client.tick(5100) == Event::None);
+  assert(client.tick(6500) == Event::Error && client.error() == LinkStatus::InvalidPacket);
   client.reset();
   assert(client.tick(10000) == Event::None);
 }
@@ -393,6 +501,7 @@ int main() {
   sessionTests();
   protocolTests();
   controllerTests();
+  tdsWakeTests();
   codecTests();
   transportTests();
   puts("PASS: bounded logs, short passwords, cookie sessions, configuration, screen timers, MiIO and UDP");
