@@ -13,6 +13,7 @@ class Ssd1306Display final : public Display {
   void setAwake(bool awake) override;
  private:
   void drawLines(const char* a, const char* b, const char* c, const char* d);
+  void drawTds(uint8_t center, const char* text);
   const Settings& settings_;
   U8G2_SSD1306_128X32_UNIVISION_1_HW_I2C oled_{U8G2_R0, U8X8_PIN_NONE};
   uint8_t address_ = 0x3c, sda_ = 4, scl_ = 5;
