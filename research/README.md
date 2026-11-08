@@ -1,6 +1,6 @@
 # MR532-D / yunmi.waterpuri.lx7 固件分析
 
-目标设备由用户提供：小米净水器 500G 增强版，MR532-D。分析日期：2026-11-07。
+目标设备由用户提供：小米净水器 500G 增强版，MR532-D。更新日期：2026-11-08。
 
 快速了解当前进展：[TL;DR：已确认结论、待验证问题与下一步](docs/tldr.md)。
 
@@ -24,6 +24,7 @@
 | [docs/usedflow.md](docs/usedflow.md) | 流量统计证据、结论边界、只读验证方案 |
 | [docs/miio-api.md](docs/miio-api.md) | MiIO、串口接口、参数及风险 |
 | [docs/plugin.md](docs/plugin.md) | lx7 插件格式、寿命公式、历史水量与隐藏设置 |
+| [docs/power.md](docs/power.md) | 轮询、Wi-Fi 低功耗、显式 MCU 唤醒与寿命建议 |
 | [docs/evidence/](docs/evidence/) | 表解析、SHA-256、精选真实反编译输出 |
 | [scripts/](scripts/) | 只读解析和 Ghidra 导出脚本 |
 
