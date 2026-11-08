@@ -76,6 +76,8 @@ lx7 默认隐藏天数字样，但内部仍用天数判断临期提示。用户 
 
 **实时制水状态尚未恢复**：run_status 在插件中用于故障位解析，rinse 用于冲洗提示。用户实测两者在普通制水和不制水时均为 0，不能用它们区分这两种工况。历史制水事件的上传实时性也未验证。见 [用户观察 U4 与状态处理原文](evidence/operating-state.md)。
 
+所查首页也没有比较前后两次 tds_out 来判定制水：模块 10253 的 MainPageTDS.setData 直接显示有效 TDS，无效时调用模块 10256 的 showInitValue，显示“等待制水开始”；模块 10295 的水波动画在挂载后循环，TDS 用于配色。TDS 变化作为最近活动线索仍是待验证的经验规则，不能保证即时制水状态。详见 [TDS 显示条件及原文](evidence/operating-state.md#是否通过-tds_out-变化判断制水)。
+
 ## 复现
 
 先将该包的 `android/main.bundle` 放到本地忽略目录：
