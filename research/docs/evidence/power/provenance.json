@@ -1,0 +1,202 @@
+{
+  "date": "2026-11-08",
+  "source": "firmware/yunmi.waterpuri.lx7-1.3.9.bin",
+  "sha256": "f20d634664918a9e5ab483774c1fd3b80afae2bfd6a5416619a56aaa1093a1c5",
+  "firmware_version": "1.3.9",
+  "rea": {
+    "version": "6.8.0",
+    "command": "rea function work/extracted/lx7-analysis.elf 0x4024ca4c --format json",
+    "outcome": "unsupported ELF architecture",
+    "evidence": "docs/evidence/power/rea-function-rejection.json"
+  },
+  "fallback": {
+    "tool": "Ghidra 12.1.4",
+    "processor": "Xtensa:LE:32:default",
+    "script": "scripts/ExportFunctions.java",
+    "project": "work/ghidra-project/lx7",
+    "analysis_only": true
+  },
+  "functions": [
+    {
+      "function": "FUN_402062f8",
+      "va": "0x402062f8",
+      "firmware_offset": "0x52f8",
+      "path": "docs/evidence/decompiled/402062f8.c",
+      "sha256": "525104ebcb6226079304f325fc9b7c494dbd29f94f0c74a265632f21d8a8d81a"
+    },
+    {
+      "function": "FUN_40204820",
+      "va": "0x40204820",
+      "firmware_offset": "0x3820",
+      "path": "docs/evidence/decompiled/40204820.c",
+      "sha256": "87d957ceb3e5cf7e709315fda39c2675a1a433a1121b442b3e2040b69dd59fa8"
+    },
+    {
+      "function": "FUN_4023fc10",
+      "va": "0x4023fc10",
+      "firmware_offset": "0x3ec10",
+      "path": "docs/evidence/decompiled/4023fc10.c",
+      "sha256": "16cd69efc3ab522bbb1c49d8fa6fd3faf16b700f4c9a00acf71437219e2ca163"
+    },
+    {
+      "function": "FUN_4023d8b0",
+      "va": "0x4023d8b0",
+      "firmware_offset": "0x3c8b0",
+      "path": "docs/evidence/decompiled/4023d8b0.c",
+      "sha256": "157e10ba9a867570b05ef631126c5113003f2af3b46db12b1ee5850dea307691"
+    },
+    {
+      "function": "FUN_4024ca4c",
+      "va": "0x4024ca4c",
+      "firmware_offset": "0x4ba4c",
+      "path": "docs/evidence/decompiled/4024ca4c.c",
+      "sha256": "c788f0f59fa90f1bf4d78947b82b385a1d88811876c3cbcb078a3dbc49d8c89c"
+    },
+    {
+      "function": "FUN_4024c4f4",
+      "va": "0x4024c4f4",
+      "firmware_offset": "0x4b4f4",
+      "path": "docs/evidence/decompiled/4024c4f4.c",
+      "sha256": "ee47d3c0f8ff70c329c47d164660a40f33c8c2c0950d6f023c52e744f4b68c36"
+    },
+    {
+      "function": "FUN_4024c2d8",
+      "va": "0x4024c2d8",
+      "firmware_offset": "0x4b2d8",
+      "path": "docs/evidence/decompiled/4024c2d8.c",
+      "sha256": "50cd5c3acd45559e9b715b102c02c7b483f78dd2e38a1e57c932cda898191277"
+    },
+    {
+      "function": "FUN_4024cbfc",
+      "va": "0x4024cbfc",
+      "firmware_offset": "0x4bbfc",
+      "path": "docs/evidence/decompiled/4024cbfc.c",
+      "sha256": "2f9462f85478e8a1ffc7401519423a5a71cff71fe455986a408480aef64ca488"
+    },
+    {
+      "function": "FUN_4024b89c",
+      "va": "0x4024b89c",
+      "firmware_offset": "0x4a89c",
+      "path": "docs/evidence/decompiled/4024b89c.c",
+      "sha256": "61eb4ba430ecb8d9c6574815694107b6cfebe13540c8eb6a6f25f845d6a4eba7"
+    },
+    {
+      "function": "FUN_4024b278",
+      "va": "0x4024b278",
+      "firmware_offset": "0x4a278",
+      "path": "docs/evidence/decompiled/4024b278.c",
+      "sha256": "b51f44fa13cd5cbcd52842312a335e977fd9628263ea44d6b09ad6e2b4160649"
+    },
+    {
+      "function": "FUN_4024e0c0",
+      "va": "0x4024e0c0",
+      "firmware_offset": "0x4d0c0",
+      "path": "docs/evidence/decompiled/4024e0c0.c",
+      "sha256": "5f08357c7803205a3f34b1de3461d6e9b3767f3c58a645828e8a17dc7217bfa1"
+    },
+    {
+      "function": "FUN_40244068",
+      "va": "0x40244068",
+      "firmware_offset": "0x43068",
+      "path": "docs/evidence/decompiled/40244068.c",
+      "sha256": "9e071b1d8c8f04c310974ca4d66b982622eced93e986c2199841a730aea25286"
+    },
+    {
+      "function": "FUN_402047a4",
+      "va": "0x402047a4",
+      "firmware_offset": "0x37a4",
+      "path": "docs/evidence/decompiled/402047a4.c",
+      "sha256": "122f15cbaac47c56287e7a27c4e2b24d1730383415f40b2782d5e18a70f94ccf"
+    },
+    {
+      "function": "FUN_40219750",
+      "va": "0x40219750",
+      "firmware_offset": "0x18750",
+      "path": "docs/evidence/decompiled/40219750.c",
+      "sha256": "35de49ef4d79233c3d6e94b89539e937cf3e5c5a10801da869d8f16f48b5596a"
+    },
+    {
+      "function": "FUN_40208670",
+      "va": "0x40208670",
+      "firmware_offset": "0x7670",
+      "path": "docs/evidence/decompiled/40208670.c",
+      "sha256": "6de3ff3e1664a130a027a78cb48a3593aefc1ac825c9f7338be1c97cbe1bcc7e"
+    },
+    {
+      "function": "FUN_402087c0",
+      "va": "0x402087c0",
+      "firmware_offset": "0x77c0",
+      "path": "docs/evidence/decompiled/402087c0.c",
+      "sha256": "54d75fccbe1b5d740f65c6c497e573ac36830d54027bce3d20b4d396891db667"
+    },
+    {
+      "function": "FUN_40207e78",
+      "va": "0x40207e78",
+      "firmware_offset": "0x6e78",
+      "path": "docs/evidence/decompiled/40207e78.c",
+      "sha256": "53b15cb004dc02e72db927f1bba71c8b6d4b4ca2034fd4a9402f5de0f22ae5c3"
+    },
+    {
+      "function": "FUN_40241f94",
+      "va": "0x40241f94",
+      "firmware_offset": "0x40f94",
+      "path": "docs/evidence/decompiled/40241f94.c",
+      "sha256": "605e25c1f51508dc1abde70482e2c083e8b1e13c504ac0624aee863e28cd8cab"
+    },
+    {
+      "function": "FUN_4021a810",
+      "va": "0x4021a810",
+      "firmware_offset": "0x19810",
+      "path": "docs/evidence/decompiled/4021a810.c",
+      "sha256": "a1a6d0c33c70dca997593f3bb4dba095d208825e81c8c158c46117124e32090f"
+    },
+    {
+      "function": "FUN_402197fc",
+      "va": "0x402197fc",
+      "firmware_offset": "0x187fc",
+      "path": "docs/evidence/decompiled/402197fc.c",
+      "sha256": "e5e0e23e9b9f8964c3dd563730a4f78d31f9beb7f275021029c4c4c65d0ec3d9"
+    },
+    {
+      "function": "FUN_402083b0",
+      "va": "0x402083b0",
+      "firmware_offset": "0x73b0",
+      "path": "docs/evidence/decompiled/402083b0.c",
+      "sha256": "84ed023a0285e70ed59c34b7ba6864d6c0b8222a84cf76f98fd80c324d1184bb"
+    },
+    {
+      "function": "FUN_4020840c",
+      "va": "0x4020840c",
+      "firmware_offset": "0x740c",
+      "path": "docs/evidence/decompiled/4020840c.c",
+      "sha256": "ca852eed8bd4089279d8d12918778774205ad7edf56bfa24ddc8e784957a37be"
+    },
+    {
+      "function": "FUN_402571c8",
+      "va": "0x402571c8",
+      "firmware_offset": "0x561c8",
+      "path": "docs/evidence/decompiled/402571c8.c",
+      "sha256": "93f20e3aa61542b201d26ebf42b699edfb4659d2dd6b4fa79ccadcf56cf08cc4"
+    },
+    {
+      "function": "FUN_402021c8",
+      "va": "0x402021c8",
+      "firmware_offset": "0x11c8",
+      "path": "docs/evidence/decompiled/402021c8.c",
+      "sha256": "978624fdfaff983ff3efed21637ef06c2df8046fd15fee397b55bdb86b789383"
+    },
+    {
+      "function": "FUN_4020634c",
+      "va": "0x4020634c",
+      "firmware_offset": "0x534c",
+      "path": "docs/evidence/decompiled/4020634c.c",
+      "sha256": "330243e7da3d4959e63815e277ca720894efa49ecdbec646e6cdd92b5ec19d19"
+    }
+  ],
+  "limitations": [
+    "Only firmware 1.3.9; current device reports 2.1.3 / MCU 0012.",
+    "Inferred names and types; actual instructions take precedence.",
+    "No MCU image, live device queries, sleep measurements or lifetime tests.",
+    "Static entry references and direct calls do not prove completeness of runtime indirect behavior."
+  ]
+}

@@ -1,0 +1,453 @@
+{
+  "sha256": "f20d634664918a9e5ab483774c1fd3b80afae2bfd6a5416619a56aaa1093a1c5",
+  "native_delegates": [
+    {
+      "namespace": "miIO",
+      "method": "miIO.bind_stat",
+      "symbol": "bind_stat_JsDlgt",
+      "table_offset": "0x6d980",
+      "function": "0x4023f1cc",
+      "function_offset": "0x3e1cc",
+      "string_offset": "0x6dd18"
+    },
+    {
+      "namespace": "miIO",
+      "method": "miIO.get_disable_local_restore",
+      "symbol": "get_disable_local_restore_JsDlgt",
+      "table_offset": "0x6d988",
+      "function": "0x4023f114",
+      "function_offset": "0x3e114",
+      "string_offset": "0x6dd29"
+    },
+    {
+      "namespace": "miIO",
+      "method": "miIO.disable_local_restore",
+      "symbol": "disable_local_restore_JsDlgt",
+      "table_offset": "0x6d990",
+      "function": "0x4023f300",
+      "function_offset": "0x3e300",
+      "string_offset": "0x6dd4a"
+    },
+    {
+      "namespace": "miIO",
+      "method": "miIO.wake_up_mcu",
+      "symbol": "wake_up_mcu_JsDlgt",
+      "table_offset": "0x6d998",
+      "function": "0x4023fc10",
+      "function_offset": "0x3ec10",
+      "string_offset": "0x6e5d7"
+    },
+    {
+      "namespace": "miIO",
+      "method": "miIO.config",
+      "symbol": "config_JsDlgt",
+      "table_offset": "0x6d9a0",
+      "function": "0x402400dc",
+      "function_offset": "0x3f0dc",
+      "string_offset": "0x6e5ea"
+    },
+    {
+      "namespace": "miIO",
+      "method": "miIO.reboot",
+      "symbol": "reboot_JsDlgt",
+      "table_offset": "0x6d9a8",
+      "function": "0x4023fbc8",
+      "function_offset": "0x3ebc8",
+      "string_offset": "0x6e5f8"
+    },
+    {
+      "namespace": "miIO",
+      "method": "miIO.restore",
+      "symbol": "restore_JsDlgt",
+      "table_offset": "0x6d9b0",
+      "function": "0x402403d0",
+      "function_offset": "0x3f3d0",
+      "string_offset": "0x6e606"
+    },
+    {
+      "namespace": "miIO",
+      "method": "miIO.stop_diag_mode",
+      "symbol": "stop_diag_mode_JsDlgt",
+      "table_offset": "0x6d9b8",
+      "function": "0x4023fb94",
+      "function_offset": "0x3eb94",
+      "string_offset": "0x6e615"
+    },
+    {
+      "namespace": "miIO",
+      "method": "miIO.wifi_assoc_state",
+      "symbol": "wifi_assoc_state_JsDlgt",
+      "table_offset": "0x6d9c0",
+      "function": "0x4023fc88",
+      "function_offset": "0x3ec88",
+      "string_offset": "0x6e62b"
+    },
+    {
+      "namespace": "miIO",
+      "method": "miIO.config_router",
+      "symbol": "config_router_JsDlgt",
+      "table_offset": "0x6d9c8",
+      "function": "0x402415c8",
+      "function_offset": "0x405c8",
+      "string_offset": "0x6e643"
+    },
+    {
+      "namespace": "miIO",
+      "method": "miIO.info",
+      "symbol": "info_JsDlgt",
+      "table_offset": "0x6d9d0",
+      "function": "0x40241160",
+      "function_offset": "0x40160",
+      "string_offset": "0x6e658"
+    },
+    {
+      "namespace": "miIO",
+      "method": "miIO.ota_install",
+      "symbol": "ota_install_JsDlgt",
+      "table_offset": "0x6d9d8",
+      "function": "0x40243ccc",
+      "function_offset": "0x42ccc",
+      "string_offset": "0x6e7b5"
+    },
+    {
+      "namespace": "miIO",
+      "method": "miIO.ota",
+      "symbol": "ota_JsDlgt",
+      "table_offset": "0x6d9e0",
+      "function": "0x40243100",
+      "function_offset": "0x42100",
+      "string_offset": "0x6e7c8"
+    },
+    {
+      "namespace": "miIO",
+      "method": "miIO.get_ota_state",
+      "symbol": "get_ota_state_JsDlgt",
+      "table_offset": "0x6d9e8",
+      "function": "0x40242178",
+      "function_offset": "0x41178",
+      "string_offset": "0x6e7d3"
+    },
+    {
+      "namespace": "miIO",
+      "method": "miIO.get_ota_progress",
+      "symbol": "get_ota_progress_JsDlgt",
+      "table_offset": "0x6d9f0",
+      "function": "0x402433f8",
+      "function_offset": "0x423f8",
+      "string_offset": "0x6e7e8"
+    },
+    {
+      "namespace": "user",
+      "method": "user.bind_key",
+      "symbol": "bind_key_JsDlgt",
+      "table_offset": "0x6d9f8",
+      "function": "0x4023f170",
+      "function_offset": "0x3e170",
+      "string_offset": "0x6dd67"
+    }
+  ],
+  "uart_commands": [
+    {
+      "command": "help",
+      "help": null,
+      "function": "0x4024b0a4",
+      "function_offset": "0x4a0a4",
+      "table_offset": "0x6d800",
+      "string_offset": "0x6f27d"
+    },
+    {
+      "command": "echo",
+      "help": "\tARG: <on or off> RET: ok",
+      "function": "0x4024bd54",
+      "function_offset": "0x4ad54",
+      "table_offset": "0x6d80c",
+      "string_offset": "0x6f282"
+    },
+    {
+      "command": "version",
+      "help": "\tARG: none RET: 1/2/3...",
+      "function": "0x4024b080",
+      "function_offset": "0x4a080",
+      "table_offset": "0x6d818",
+      "string_offset": "0x6f302"
+    },
+    {
+      "command": "net",
+      "help": "\tARG: none RET: ok/error",
+      "function": "0x4024c544",
+      "function_offset": "0x4b544",
+      "table_offset": "0x6d824",
+      "string_offset": "0x6f2ba"
+    },
+    {
+      "command": "time",
+      "help": "\tARG: none RET: ok/error",
+      "function": "0x4024c5c4",
+      "function_offset": "0x4b5c4",
+      "table_offset": "0x6d830",
+      "string_offset": "0x6f2d7"
+    },
+    {
+      "command": "mac",
+      "help": "\tARG: none RET: ok/error",
+      "function": "0x4024c660",
+      "function_offset": "0x4b660",
+      "table_offset": "0x6d83c",
+      "string_offset": "0x6e454"
+    },
+    {
+      "command": "model",
+      "help": "\tARG: <model_string> RET: <model>",
+      "function": "0x4024c6b0",
+      "function_offset": "0x4b6b0",
+      "table_offset": "0x6d848",
+      "string_offset": "0x6e358"
+    },
+    {
+      "command": "mcu_version",
+      "help": "\tARG: <ver_string> RET: <mcu_ver>",
+      "function": "0x4024c808",
+      "function_offset": "0x4b808",
+      "table_offset": "0x6d854",
+      "string_offset": "0x6f2fe"
+    },
+    {
+      "command": "country_code",
+      "help": "\tARG: <country code string: CN/US/CA/SG/EU/AU/KR/FR/JP> RET: <ok/error>",
+      "function": "0x4024bcfc",
+      "function_offset": "0x4acfc",
+      "table_offset": "0x6d860",
+      "string_offset": "0x6f32c"
+    },
+    {
+      "command": "reboot",
+      "help": "\tARG: none RET: ok/error",
+      "function": "0x4024c914",
+      "function_offset": "0x4b914",
+      "table_offset": "0x6d86c",
+      "string_offset": "0x6e73a"
+    },
+    {
+      "command": "restore",
+      "help": "\tARG: none RET: ok/error",
+      "function": "0x4024c954",
+      "function_offset": "0x4b954",
+      "table_offset": "0x6d878",
+      "string_offset": "0x6dcf4"
+    },
+    {
+      "command": "update_me",
+      "help": "\tARG: none RET: ok/error",
+      "function": "0x4024c9c0",
+      "function_offset": "0x4b9c0",
+      "table_offset": "0x6d884",
+      "string_offset": "0x6f381"
+    },
+    {
+      "command": "factory",
+      "help": "\tARG: none RET: ok/error",
+      "function": "0x4024c9d8",
+      "function_offset": "0x4b9d8",
+      "table_offset": "0x6d890",
+      "string_offset": "0x6f38b"
+    },
+    {
+      "command": "get_pin_level",
+      "help": "\tARG: <mask1> <mask2> <mask3> RET: 0xXXXXXXXX 0xXXXXXXXX 0xXXXXXXXX",
+      "function": "0x4024ca0c",
+      "function_offset": "0x4ba0c",
+      "table_offset": "0x6d89c",
+      "string_offset": "0x6f393"
+    },
+    {
+      "command": "get_up",
+      "help": "\tDeprecated! ARG: none RET: ok/error",
+      "function": "0x4024b068",
+      "function_offset": "0x4a068",
+      "table_offset": "0x6d8a8",
+      "string_offset": "0x6f3e5"
+    },
+    {
+      "command": "props",
+      "help": "\tARG: <prop1> <\"strvalue1\"> <prop2> <intvalue2> ...  RET: ok/error",
+      "function": "0x4024bb84",
+      "function_offset": "0x4ab84",
+      "table_offset": "0x6d8b4",
+      "string_offset": "0x6f411"
+    },
+    {
+      "command": "event",
+      "help": "\tARG: <event> <\"strvalue1\"> <intvalue2> ...          RET: ok/error",
+      "function": "0x4024ba38",
+      "function_offset": "0x4aa38",
+      "table_offset": "0x6d8c0",
+      "string_offset": "0x6f45a"
+    },
+    {
+      "command": "get_down",
+      "help": "\tARG: none  RET: down <method> <arg1> <arg2> ... / down none",
+      "function": "0x4024b89c",
+      "function_offset": "0x4a89c",
+      "table_offset": "0x6d8cc",
+      "string_offset": "0x6f632"
+    },
+    {
+      "command": "result",
+      "help": "\tARG: <\"value1\"> <value2> ... RET: ok/error",
+      "function": "0x4024b4e8",
+      "function_offset": "0x4a4e8",
+      "table_offset": "0x6d8d8",
+      "string_offset": "0x6eda6"
+    },
+    {
+      "command": "error",
+      "help": "\tARG: <\"message\"> <error_code> RET: ok/error",
+      "function": "0x4024b78c",
+      "function_offset": "0x4a78c",
+      "table_offset": "0x6d8e4",
+      "string_offset": "0x6f627"
+    },
+    {
+      "command": "log",
+      "help": "\tARG: <log_name> <\"strarg1\"> <intarg2> ...",
+      "function": "0x4024b6c8",
+      "function_offset": "0x4a6c8",
+      "table_offset": "0x6d8f0",
+      "string_offset": "0x6f72d"
+    },
+    {
+      "command": "store",
+      "help": "\tARG: <store_name> <\"strarg1\"> <intarg2> ...",
+      "function": "0x4024b60c",
+      "function_offset": "0x4a60c",
+      "table_offset": "0x6d8fc",
+      "string_offset": "0x6f738"
+    },
+    {
+      "command": "call",
+      "help": "\tARG: <method> <params>  RET: result ... / error ...",
+      "function": "0x4024b3fc",
+      "function_offset": "0x4a3fc",
+      "table_offset": "0x6d908",
+      "string_offset": "0x6f591"
+    },
+    {
+      "command": "setwifi",
+      "help": "\tARG: <\"ssid\"> <\"passwd\">  RET: ok/ error",
+      "function": "0x4024bc9c",
+      "function_offset": "0x4ac9c",
+      "table_offset": "0x6d914",
+      "string_offset": "0x6f5cb"
+    },
+    {
+      "command": "getwifi",
+      "help": "\tARG: none RET: <\"ssid\"> <rssi> / error",
+      "function": "0x4024b374",
+      "function_offset": "0x4a374",
+      "table_offset": "0x6d920",
+      "string_offset": "0x6f5fd"
+    },
+    {
+      "command": "json_get_down",
+      "help": "\tARG: none RET: <json_string>/down none",
+      "function": "0x4024b278",
+      "function_offset": "0x4a278",
+      "table_offset": "0x6d92c",
+      "string_offset": "0x6f62d"
+    },
+    {
+      "command": "json_ack",
+      "help": "\t\tARG: <json_string> RET: ok/error",
+      "function": "0x4024b1b4",
+      "function_offset": "0x4a1b4",
+      "table_offset": "0x6d938",
+      "string_offset": "0x6f663"
+    },
+    {
+      "command": "json_send",
+      "help": "\t\tARG: <json_string> RET: ok/error",
+      "function": "0x4024bc18",
+      "function_offset": "0x4ac18",
+      "table_offset": "0x6d944",
+      "string_offset": "0x6f68f"
+    },
+    {
+      "command": "arch",
+      "help": "\t\tARG: <arch_string> RET: chip_type",
+      "function": "0x4024ca24",
+      "function_offset": "0x4ba24",
+      "table_offset": "0x6d950",
+      "string_offset": "0x6f699"
+    },
+    {
+      "command": "set_low_power",
+      "help": "\tARG: <on or off> RET: ok",
+      "function": "0x4024ca4c",
+      "function_offset": "0x4ba4c",
+      "table_offset": "0x6d95c",
+      "string_offset": "0x6f6c2"
+    }
+  ],
+  "exact_string_search": {
+    "usedflow": {
+      "ascii": [],
+      "utf-16le": [],
+      "utf-16be": []
+    },
+    "get_prop": {
+      "ascii": [],
+      "utf-16le": [],
+      "utf-16be": []
+    },
+    "tds_warn_thd": {
+      "ascii": [],
+      "utf-16le": [],
+      "utf-16be": []
+    },
+    "lightMode": {
+      "ascii": [],
+      "utf-16le": [],
+      "utf-16be": []
+    },
+    "filter": {
+      "ascii": [],
+      "utf-16le": [],
+      "utf-16be": []
+    },
+    "yunmi.waterpuri.lx7": {
+      "ascii": [],
+      "utf-16le": [],
+      "utf-16be": []
+    },
+    "MR532-D": {
+      "ascii": [],
+      "utf-16le": [],
+      "utf-16be": []
+    },
+    "3600": {
+      "ascii": [],
+      "utf-16le": [],
+      "utf-16be": []
+    },
+    "7200": {
+      "ascii": [],
+      "utf-16le": [],
+      "utf-16be": []
+    },
+    "8640": {
+      "ascii": [],
+      "utf-16le": [],
+      "utf-16be": []
+    },
+    "17280": {
+      "ascii": [],
+      "utf-16le": [],
+      "utf-16be": []
+    }
+  },
+  "limitations": [
+    "A string absence is not proof that runtime MCU lacks a method.",
+    "IROM assumes OTA user1 at flash 0x1000.",
+    "user.bind_key is also resolved by unprefixed bind_key."
+  ]
+}

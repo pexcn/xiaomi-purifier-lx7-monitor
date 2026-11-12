@@ -2,7 +2,9 @@
 
 NodeMCU ESP8266 + SSD1306 128×32，通过局域网 MiIO/UDP 只读查询 `yunmi.waterpuri.lx7`，无需 Home Assistant 或云端登录。显示原水/纯水 TDS、温度及两支滤芯的流量寿命；默认每 **2.5 秒**轮询，熄屏时继续查询，支持 Wi-Fi 重连、超时重握手和异常提示。
 
-**默认按出水 TDS 变化唤醒，连续 30 秒无变化后熄屏。** 这是用户选择的近似活动规则；持续制水但 TDS 不变时也会熄屏，停水后延迟更新也可能亮屏。[分析仓库](https://github.com/pexcn/xiaomi-purifier-lx7-re)尚未恢复可靠的实时制水字段，所分析的官方插件也没有按 TDS 变化判断制水。协议证据及用户日志见 [docs/protocol.md](docs/protocol.md)。本项目已编译及通过主机测试，用户反馈实机数据看起来正确；新亮屏规则与长期稳定性仍需实物验证。
+**默认按出水 TDS 变化唤醒，连续 30 秒无变化后熄屏。** 这是用户选择的近似活动规则；持续制水但 TDS 不变时也会熄屏，停水后延迟更新也可能亮屏。[逆向研究](research/docs/tldr.md)尚未恢复可靠的实时制水字段，所分析的官方插件也没有按 TDS 变化判断制水。协议证据及用户日志见 [docs/protocol.md](docs/protocol.md)。本项目已编译及通过主机测试，用户反馈实机数据看起来正确；新亮屏规则与长期稳定性仍需实物验证。
+
+逆向分析摘要见 [research/docs/tldr.md](research/docs/tldr.md)，完整文档、证据和分析工具见 [research/README.md](research/README.md)。监视器按流量显示寿命；研究资料中的官方插件按时间显示寿命，两者分别记录。
 
 ## 接线
 
@@ -126,6 +128,12 @@ Wi-Fi 连续断开 60 秒也会打开一次设置热点，原连接仍持续重�
 一次通信失败即显示异常、隐藏旧数据，持续重试；故障提示维持一个熄屏延时窗口，持续故障不会反复唤醒屏幕。恢复成功后重新显示。Wi-Fi 每 10 秒尝试重连；MiIO 超时、校验失败、RPC 错误会重新握手。错误和原始状态均可从串口观察；OLED 正常界面仅显示 TDS、滤芯余量和温度，已移除 `R`、`UNVERIFIED`、`RINSE` 等诊断标签。配置缺失/无效时进入设置热点，文件系统挂载失败不会自动格式化。
 
 ## 结构与测试
+
+运行代码位于 `src/`、`include/`，主机测试位于 `tests/`；逆向文档、证据、脚本和独立测试集中在 `research/`，不会参与 PlatformIO 的应用编译。研究命令从 `research/` 执行，离线测试可在根目录运行：
+
+```sh
+python3 -m unittest discover -s research/tests -v
+```
 
 ```text
 MiioCodec + MiioCrypto       MiIO 报文、校验、AES（当前使用核心自带 BearSSL）

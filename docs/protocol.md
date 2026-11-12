@@ -1,12 +1,12 @@
 # MiIO 接口核实与证据边界
 
-核对日期：2026-11-08。以下区分分析仓库证据与用户提供的本项目实机日志；开发环境未直接连接设备。
+核对日期：2026-11-08。以下区分仓库内研究证据与用户提供的本项目实机日志；开发环境未直接连接设备。
 
-主要来源：[`pexcn/xiaomi-purifier-lx7-re@2843776`](https://github.com/pexcn/xiaomi-purifier-lx7-re/tree/2843776f978d251e31e8c0f1a2042262f18bac26)。其旧 Wi-Fi 固件样本是 **1.3.9**，分析仓库用户设备为 **2.1.3 / MCU 0012**，二者不可混为当前实现证据。lx7 插件的型号映射版本 75 是另一组版本信息。
+主要来源：[研究历史 `88e7082`（原 `2843776`）](https://github.com/pexcn/xiaomi-purifier-lx7-monitor/tree/88e70822c2d332993b11e196cdba90cd8c76ca03/research)。其旧 Wi-Fi 固件样本是 **1.3.9**，研究记录中的用户设备为 **2.1.3 / MCU 0012**，二者不可混为当前实现证据。lx7 插件的型号映射版本 75 是另一组版本信息。
 
 | 接口/字段 | 已确认的证据 | 本项目处理/待验证 |
 |---|---|---|
-| `get_prop`，参数为属性名字符串数组 | 分析仓库记录的用户八字段查询成功；lx7 插件调用 15 字段；用户本项目日志已输出有效状态及滤芯计数 | 仅发送只读请求；用户反馈显示数据看起来正确，尚未提供完整原始应答用于逐项核对 |
+| `get_prop`，参数为属性名字符串数组 | 研究资料记录的用户八字段查询成功；lx7 插件调用 15 字段；用户本项目日志已输出有效状态及滤芯计数 | 仅发送只读请求；用户反馈显示数据看起来正确，尚未提供完整原始应答用于逐项核对 |
 | `tds_in` / `tds_out` | 插件请求并解释为进/出水 TDS，UI 使用 mg/L、文案使用 ppm | 显示设备值；本机采样周期、校准与现场可读性待验证 |
 | `temperature` | 插件读取并标记为 ℃ | 显示数值；缺失显示 `--` |
 | `f1_usedflow` / `f2_usedflow` | 用户请求返回过 0、10；插件也读取 | 仅作为累计流量计数，不补造更新时间或计量水路 |
@@ -16,7 +16,7 @@
 | `usedtime` / `totaltime` | 插件按时间计算百分比 | 用户要求按流量计算，本项目完全不请求这些字段 |
 | `miIO.info.life` | 旧样本来自运行 tick | 不用作滤芯寿命，也不请求可能含敏感信息的 `miIO.info` |
 
-详见上游固定版本的 [接口表](https://github.com/pexcn/xiaomi-purifier-lx7-re/blob/2843776f978d251e31e8c0f1a2042262f18bac26/docs/miio-api.md)、[插件证据](https://github.com/pexcn/xiaomi-purifier-lx7-re/blob/2843776f978d251e31e8c0f1a2042262f18bac26/docs/plugin.md)、[状态证据](https://github.com/pexcn/xiaomi-purifier-lx7-re/blob/2843776f978d251e31e8c0f1a2042262f18bac26/docs/evidence/operating-state.md)及 [流量口径](https://github.com/pexcn/xiaomi-purifier-lx7-re/blob/2843776f978d251e31e8c0f1a2042262f18bac26/docs/usedflow.md)。
+详见迁入后固定研究版本的 [接口表](https://github.com/pexcn/xiaomi-purifier-lx7-monitor/blob/88e70822c2d332993b11e196cdba90cd8c76ca03/research/docs/miio-api.md)、[插件证据](https://github.com/pexcn/xiaomi-purifier-lx7-monitor/blob/88e70822c2d332993b11e196cdba90cd8c76ca03/research/docs/plugin.md)、[状态证据](https://github.com/pexcn/xiaomi-purifier-lx7-monitor/blob/88e70822c2d332993b11e196cdba90cd8c76ca03/research/docs/evidence/operating-state.md)及 [流量口径](https://github.com/pexcn/xiaomi-purifier-lx7-monitor/blob/88e70822c2d332993b11e196cdba90cd8c76ca03/research/docs/usedflow.md)。
 
 本项目请求顺序固定如下，返回数组严格逐项对应，不能套用插件不同顺序的数组：
 
@@ -46,14 +46,14 @@ INFO run_status=0 rinse=0 f1=10/7200 f2=10/7200
 
 插件按故障位解释 `run_status`、用 `rinse` 提示冲洗，与用户观察相容。已查证据尚未恢复其他实时制水 getter；这不等于证明设备不存在其他属性或推送机制。`pure_water_record` 是云端历史记录，不能当作局域网 `get_prop` 属性或实时开关量。
 
-因此不填入猜测的 `making_mask`。`unverified` 可选为有正常数据时保持亮屏；`flow_change` 只提供计数变化提示。上游关于 10 流量档的描述仍是观察支持的假设，**不能保证每次轮询计数变化，也不能保证短时制水可检测**。未来只有实测证据支持后才配置状态规则，或加入已证实的新只读接口。当前不能承诺准确的“制水即亮、停止后 30 秒熄屏”。
+因此不填入猜测的 `making_mask`。`unverified` 可选为有正常数据时保持亮屏；`flow_change` 只提供计数变化提示。研究资料关于 10 流量档的描述仍是观察支持的假设，**不能保证每次轮询计数变化，也不能保证短时制水可检测**。未来只有实测证据支持后才配置状态规则，或加入已证实的新只读接口。当前不能承诺准确的“制水即亮、停止后 30 秒熄屏”。
 
 ## TDS 变化唤醒（默认经验规则）
 
 用户选择按 `tds_out` 的变化唤醒屏幕，默认每 2500ms 查询、最后一次变化后 30000ms 熄屏；这些是本项目设置，不是设备协议或官方制水算法。复用原有九字段请求和上一份读数，不增加请求，不持久化活动状态。只比较连续有效且未过期的样本；首次收到数据或通信恢复时显示一个延时窗口，缺失/非法 TDS 不触发变化，随后第一次有效值只建立基线。
 
-上游新分析 [`cfe98aa`](https://github.com/pexcn/xiaomi-purifier-lx7-re/blob/cfe98aa6d74cacffb18bb2f1b3ac1cb22d946b36/docs/evidence/operating-state.md#是否通过-tds_out-变化判断制水)给出了所上传官方插件的显示链：`MainPageTDS.setData` 直接覆盖并显示有效 TDS，没有比较前后差值；出水 TDS≥1000 或进/出水字段为 `error`/`null`/`undefined` 时显示“等待制水开始”；水波在挂载后循环动画，TDS 用于配色。这些显示条件不等于实时制水状态，也不证明 1000 是停机状态码，本项目不把该阈值作为亮灭屏规则。
+研究历史 [`6c4e4f8`（原 `cfe98aa`）](https://github.com/pexcn/xiaomi-purifier-lx7-monitor/blob/6c4e4f81ebd9be304edfae9223108765edce93a2/research/docs/evidence/operating-state.md#是否通过-tds_out-变化判断制水)给出了所上传官方插件的显示链：`MainPageTDS.setData` 直接覆盖并显示有效 TDS，没有比较前后差值；出水 TDS≥1000 或进/出水字段为 `error`/`null`/`undefined` 时显示“等待制水开始”；水波在挂载后循环动画，TDS 用于配色。这些显示条件不等于实时制水状态，也不证明 1000 是停机状态码，本项目不把该阈值作为亮灭屏规则。
 
 TDS 变化只能作为最近有测量更新的经验线索。制水时整数读数可能长时间相同，停水后也可能延迟更新；静止时的采样规律尚未确认。本模式可能在制水中熄屏或在停水后亮屏，误判率需带人工开关水时间的实机日志验证。诊断日志已包含 `tds_in`、`tds_out`，原始 `run_status`、`rinse` 和滤芯计数仍保留。现有显式配置在 OTA 后保留，不自动改写旧的 `unverified`/2000ms 设置；启用方式见 README。
 
-滤芯 `usedflow/totalflow` 的单位及原水/纯水口径在上游仍待验证；本项目按用户要求只按这两个数计算流量百分比，升数需用户明确配置系数。没有任何时间寿命回退、固定纯废水比或除以 2 的隐含换算。
+滤芯 `usedflow/totalflow` 的单位及原水/纯水口径在研究资料中仍待验证；本项目按用户要求只按这两个数计算流量百分比，升数需用户明确配置系数。没有任何时间寿命回退、固定纯废水比或除以 2 的隐含换算。

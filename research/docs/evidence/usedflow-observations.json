@@ -1,0 +1,37 @@
+{
+  "source": "User-reported get_prop response in this conversation; not queried by the analyst",
+  "observation_id": "U3",
+  "method": "get_prop",
+  "params": [
+    "f1_usedtime",
+    "f2_usedtime",
+    "f1_usedflow",
+    "f2_usedflow",
+    "f1_totaltime",
+    "f2_totaltime",
+    "f1_totalflow",
+    "f2_totalflow"
+  ],
+  "result": [24, 24, 10, 10, 8640, 17280, 7200, 7200],
+  "context": {
+    "reset": "User performed the reset; later clarification establishes an immediate zero baseline followed by U3, with no intervening reset; the analyst did not perform a reset",
+    "immediate_post_reset_baseline": {
+      "source": "User's later clarification in this conversation; no separate timestamped raw response supplied",
+      "f1_usedtime": 0,
+      "f2_usedtime": 0,
+      "f1_usedflow": 0,
+      "f2_usedflow": 0
+    },
+    "elapsed": "User clarifies that a dozen or so hours, less than 24 hours, passed between the immediate zero baseline and U3; exact timestamps and first transition time unavailable",
+    "purified_water": "User estimates a few liters; no independent measurement provided",
+    "waste_water": "Not measured",
+    "runtime_version": "No simultaneous miIO.info capture supplied for this observation"
+  },
+  "status": {
+    "reported_values": "User observation",
+    "time_quantum_24_hours": "User hypothesis: elapsed time below 24 hours is rounded up to 24, with a step of 24; supported by zero-to-24 endpoints, but further transition boundaries and calendar/elapsed-time rule unverified",
+    "flow_quantum_10_liters": "User hypothesis: flow advances in steps of 10 after a few liters of purified water; supported by zero-to-10 endpoints, but units, water basis and further transition boundaries unverified",
+    "rounding_rule": "Unverified",
+    "raw_or_purified_water": "Unresolved"
+  }
+}

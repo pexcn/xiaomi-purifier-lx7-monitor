@@ -1,0 +1,12 @@
+/work/
+/firmware/*
+!/firmware/download_ota.py
+__pycache__/
+*.pyc
+.env
+.env.*
+*.token
+auth.json
+*.bin
+*.zip
+*.apk
